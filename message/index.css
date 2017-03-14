@@ -1,0 +1,72 @@
+header {
+  background-color: #e36c09;
+  height: 35px;
+}
+body {
+  margin: 0;
+}
+.contain {
+  height: 100%;
+}
+.contain .detail {
+    height: 130px;
+    margin: 20px auto;
+    padding: 25px 0;
+    width: 1024px;
+}
+.sc_1 {
+  background-color: #ddd9c3;
+}
+.sc_2 {
+  background-color: #c4bd97;
+}
+.col {
+  display: inline-block;
+  line-height: 30px;
+}
+.cl_1 {
+  width: 30%;
+}
+.cl_2 {
+  width: 32%;
+}
+.cl_3 {
+  width: 25%;
+}
+.cl_4 {
+  width: 15%;
+}
+.gr {
+  background-color: #92d050;
+}
+.pk {
+  background-color: #0066cc;
+}
+.box {
+    line-height: 40px;
+    margin: 0 45px;
+    padding: 10px;
+}
+.box .in {
+  padding: 20px;
+  border: 1px solid #000;
+}
+.box_dt {
+  text-align: center;
+  margin: 0;
+}
+.btn_submit {
+  font-size: 18px;
+  padding: 10px 25px;
+  width: 11%;
+  margin: 0 25px;
+  border: 0px;
+}
+.btn {
+  font-size: 14px;
+  padding: 10px 25px;
+}
+.remark {
+  min-height: 130px;
+  width: 80%;
+}

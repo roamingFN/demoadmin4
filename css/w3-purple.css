@@ -1,0 +1,66 @@
+.w3-purple-theme-l5 {color:#000 !important; background-color:#f6f3fb !important}
+.w3-purple-theme-l4 {color:#000 !important; background-color:#e0d6f2 !important}
+.w3-purple-theme-l3 {color:#000 !important; background-color:#c1ade5 !important}
+.w3-purple-theme-l2 {color:#fff !important; background-color:#a384d8 !important}
+.w3-purple-theme-l1 {color:#fff !important; background-color:#845bcb !important}
+.w3-purple-theme-d1 {color:#fff !important; background-color:#5d34a4 !important}
+.w3-purple-theme-d2 {color:#fff !important; background-color:#532e92 !important}
+.w3-purple-theme-d3 {color:#fff !important; background-color:#482880 !important}
+.w3-purple-theme-d4 {color:#fff !important; background-color:#3e236d !important}
+.w3-purple-theme-d5 {color:#fff !important; background-color:#341d5b !important}
+
+.w3-purple-theme-light {color:#000 !important; background-color:#f6f3fb !important}
+.w3-purple-theme-dark {color:#fff !important; background-color:#341d5b !important}
+.w3-purple-theme-action {color:#fff !important; background-color:#341d5b !important}
+
+.w3-purple-theme {color:#fff !important; background-color:#673ab7 !important}
+.w3-purple-text-theme {color:#673ab7 !important}
+.w3-purple-theme-border {border-color:#673ab7 !important}
+.circlePurple{
+	font-size:20px;
+	vertical-align:middle;
+	padding:40px;
+	margin:20px;
+	background:#e0d6f2;
+	border:1px solid #482880;
+	border-radius:50%;
+	overflow:hidden;
+	transition:0.2s;
+}
+.circlePurple:hover{
+	color:#fff;
+	background:#a384d8;
+	text-decoration:none;
+}
+i.circlePurple{
+	font-size:42px;
+	color:#009688;
+}
+
+i{
+	color:#482880;
+}
+button,.button{
+	color:#e11a0c;
+}
+a{
+	color:#532e92;
+}
+th{
+		background:#532e92;
+}
+.undivide th{
+		background:#532e92;
+}
+.order-button:hover{
+		color:#532e92;
+}
+tr:hover{
+		background:#845bcb;
+}
+.menu i:hover{
+		color:#fff;
+		background:#532e92;
+		cursor:pointer;
+		border-radius:50%;
+}

@@ -1,0 +1,65 @@
+//blue gray
+.w3-blueGray-theme-l5 {color:#000 !important; background-color:#f5f7f8 !important}
+.w3-blueGray-theme-l4 {color:#000 !important; background-color:#dfe5e8 !important}
+.w3-blueGray-theme-l3 {color:#000 !important; background-color:#becbd2 !important}
+.w3-blueGray-theme-l2 {color:#000 !important; background-color:#9eb1bb !important}
+.w3-blueGray-theme-l1 {color:#fff !important; background-color:#7d97a5 !important}
+.w3-blueGray-theme-d1 {color:#fff !important; background-color:#57707d !important}
+.w3-blueGray-theme-d2 {color:#fff !important; background-color:#4d636f !important}
+.w3-blueGray-theme-d3 {color:#fff !important; background-color:#435761 !important}
+.w3-blueGray-theme-d4 {color:#fff !important; background-color:#3a4b53 !important}
+.w3-blueGray-theme-d5 {color:#fff !important; background-color:#303e45 !important}
+.w3-blueGray-theme-light {color:#000 !important; background-color:#f5f7f8 !important}
+.w3-blueGray-theme-dark {color:#fff !important; background-color:#303e45 !important}
+.w3-blueGray-theme-action {color:#fff !important; background-color:#303e45 !important}
+.w3-blueGray-theme {color:#fff !important; background-color:#607d8b !important}
+.w3-blueGray-text-theme {color:#607d8b !important}
+.w3-blueGray-theme-border {border-color:#607d8b !important}
+.circleBlueGray{
+	font-size:20px;
+	vertical-align:middle;
+	padding:40px;
+	margin:20px;
+	background:#dfe5e8;
+	border:1px solid #435761;
+	border-radius:50%;
+	overflow:hidden;
+	transition:0.2s;
+}
+.circleBlueGray:hover{
+	color:#fff;
+	background:#9eb1bb;
+	text-decoration:none;
+}
+i.circleBlueGray{
+	font-size:42px;
+	color:#009688;
+}
+
+i{
+	color:#435761;
+}
+button,.button{
+	color:#4d636f;
+}
+a{
+	color:#4d636f;
+}
+th{
+		background:#4d636f;
+}
+.undivide th{
+		background:#4d636f;
+}
+.order-button:hover{
+		color:#4d636f;
+}
+tr:hover{
+		background:#9eb1bb;
+}
+.menu i:hover{
+		color:#fff;
+		background:#4d636f;
+		cursor:pointer;
+		border-radius:50%;
+}

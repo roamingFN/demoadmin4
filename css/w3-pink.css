@@ -1,0 +1,65 @@
+//teal
+.w3-pink-theme-l5 {color:#000 !important; background-color:#fef2f6 !important}
+.w3-pink-theme-l4 {color:#000 !important; background-color:#fbd2e0 !important}
+.w3-pink-theme-l3 {color:#000 !important; background-color:#f6a6c1 !important}
+.w3-pink-theme-l2 {color:#fff !important; background-color:#f279a1 !important}
+.w3-pink-theme-l1 {color:#fff !important; background-color:#ed4d82 !important}
+.w3-pink-theme-d1 {color:#fff !important; background-color:#d91557 !important}
+.w3-pink-theme-d2 {color:#fff !important; background-color:#c1134d !important}
+.w3-pink-theme-d3 {color:#fff !important; background-color:#a91143 !important}
+.w3-pink-theme-d4 {color:#fff !important; background-color:#910e3a !important}
+.w3-pink-theme-d5 {color:#fff !important; background-color:#790c30 !important}
+.w3-pink-theme-light {color:#000 !important; background-color:#fef2f6 !important}
+.w3-pink-theme-dark {color:#fff !important; background-color:#790c30 !important}
+.w3-pink-theme-action {color:#fff !important; background-color:#790c30 !important}
+.w3-pink-theme {color:#fff !important; background-color:#e91e63 !important}
+.w3-pink-text-theme {color:#e91e63 !important}
+.w3-pink-theme-border {border-color:#e91e63 !important}
+.circlePink{
+	font-size:20px;
+	vertical-align:middle;
+	padding:40px;
+	margin:20px;
+	background:#fbd2e0;
+	border:1px solid #a91143;
+	border-radius:50%;
+	overflow:hidden;
+	transition:0.2s;
+}
+.circlePink:hover{
+	color:#fff;
+	background:#f279a1;
+	text-decoration:none;
+}
+i.circlePink{
+	font-size:42px;
+	color:#e91e63;
+}
+
+i{
+	color:#a91143;
+}
+button,.button{
+	color:#c1134d;
+}
+a{
+	color:#c1134d;
+}
+th{
+		background:#c1134d;
+}
+.undivide th{
+		background:#c1134d;
+}
+.order-button:hover{
+		color:#c1134d;
+}
+tr:hover{
+		background:#f279a1;
+}
+.menu i:hover{
+		color:#fff;
+		background:#c1134d;
+		cursor:pointer;
+		border-radius:50%;
+}
