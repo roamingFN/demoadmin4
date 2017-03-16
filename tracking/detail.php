@@ -239,9 +239,9 @@
 													}
 										echo '</select></td>
 										<td class="fixed"><div style="display:inline"><input name="type" class="type" type="checkbox" '.$checkedM3.' value="2" '.$disabled.'><span>M3</span><input name="type" class="type" type="checkbox" '.$checkedKg.' value="1" '.$disabled.'><span>Kg</span></div></td>
-										<td><input class="input m3" name="rate" value='.number_format($defaultRate,4,'.','').$disabled.'></td>
-										<td class="number"><input class="input" value="'.number_format($tran,2,'.','').'"></td>
-										<td class="number">'.number_format($avg,2,'.','').'</td>
+										<td><input class="input m3" name="rate" value='.number_format($defaultRate,4,'.',',').$disabled.'></td>
+										<td class="number"><input class="input" value="'.number_format($tran,2,'.',',').'"></td>
+										<td class="number">'.number_format($avg,2,'.',',').'</td>
 										<td><div style="display:inline"><input name="stat" type="checkbox" '.$checkedIncom.$disabled.'><span>Incomplete</span><input name="stat" type="checkbox" '.$checkedCom.$disabled.'><span>complete</span></div></td>
 										<td>'.$value['uid'].'</td>
 										<td>'.$dt.'</td>

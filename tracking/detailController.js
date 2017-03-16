@@ -95,7 +95,7 @@ function init() {
 	    				if ($(this).val()!='') {
 	    						if ($(this).attr('name')!='rate') {
 			    						var result = findRate($('#m3-table tbody tr').find("input").eq(4).is(':checked')? 2: 1);
-										$('#m3-table tbody tr').find("input").eq(6).val(result.toFixed(4));
+										$('#m3-table tbody tr').find("input").eq(6).val(formatRate(result));	//show rate
 								}
 	    						calM3();
 				       	}
@@ -109,7 +109,7 @@ function init() {
 
 			    if ($(this).attr('name')!='stat') {
 			    	var result = findRate($('#m3-table tbody tr').find("input").eq(4).is(':checked')? 2: 1);
-					$('#m3-table tbody tr').find("input").eq(6).val(result.toFixed(4));
+					$('#m3-table tbody tr').find("input").eq(6).val(formatRate(result));	//show rate
 			    	calM3();
 				}
 		});
@@ -152,7 +152,7 @@ function findRate(mode) {
 				//if not found rate
 				if (result==0) {
 						result = $('#m3-table tbody tr').find("input").eq(6).val();
-						console.log(result);
+						//console.log(result);
 				}
 		}
 		return result;
@@ -171,12 +171,15 @@ function calM3() {
 
 function calTran() {
 		if ($('#m3-table tbody tr').find('input').eq(4).is(':checked')) {
-				var tran = $('#m3-table tbody tr').find('td').eq(3).text() * $('#m3-table tbody tr').find('input').eq(6).val();
-				$('#m3-table tbody tr').find('input').eq(7).val(tran.toFixed(2));
+				var rate = $('#m3-table tbody tr').find('input').eq(6).val().replace(/,/g, '');
+				var tran = $('#m3-table tbody tr').find('td').eq(3).text() * rate;
+				$('#m3-table tbody tr').find('input').eq(7).val(numWithCom(tran));
+				//console.log(tran.toFixed(2));
 		}
 		if ($('#m3-table tbody tr').find('input').eq(5).is(':checked')) {
-				var tran = $('#m3-table tbody tr').find('input').eq(3).val() * $('#m3-table tbody tr').find('input').eq(6).val();
-				$('#m3-table tbody tr').find('input').eq(7).val(tran.toFixed(2));
+				var rate = $('#m3-table tbody tr').find('input').eq(6).val().replace(/,/g, '');
+				var tran = $('#m3-table tbody tr').find('input').eq(3).val() * rate;
+				$('#m3-table tbody tr').find('input').eq(7).val(numWithCom(tran));
 		}
 }
 
@@ -189,7 +192,7 @@ function calAvg() {
 		if (m3!=0) {
 				avg = total / m3;
 		}
-		//onsole.log(total + ' ' + m3 + ' ' + avg);
+		//console.log(total + ' ' + m3 + ' ' + avg);
 		$('#m3-table tbody tr').find('td').eq(9).text(numWithCom(avg));
 }
 
@@ -230,7 +233,7 @@ function save() {
 				var weight = m3Table.find("input").eq(3).val();
 				var ptype = m3Table.find("select").eq(0).val()==''? 0 : m3Table.find("select").eq(0).val();
 				var type = m3Table.find("input").eq(4).is(':checked')? 2: 1;
-				var rate = m3Table.find("input").eq(6).val();
+				var rate = m3Table.find("input").eq(6).val().replace(/,/g ,'');
 				if (type==1) {
 						rateWeight = rate;
 				}
@@ -278,7 +281,7 @@ function save() {
 						saveFlg = 0;
 						return false;
 				}
-
+				
 				data[key] = {
 						'rec': rec,
 						'width' : width,
@@ -372,5 +375,35 @@ function showAmountDialog (tid) {
 }
 
 function numWithCom(x) {
+		//console.log(Number(x).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 		return Number(x).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatRate(val) {
+	if (typeof(val)=='undefined') return 0;
+	if (val=='') return 0;
+
+	var result = '';
+	var tmp = val.toString().split('.');
+	var int = tmp[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	
+	if (typeof(tmp[1])=='undefined') {
+		decimal = '0000';
+	}
+	else {
+		decimal = tmp[1];
+		var length = decimal.length;
+		if (length==1) {
+			decimal = decimal + '000';
+		}
+		else if (length==2) {
+			decimal = decimal + '00';
+		}
+		else if (length==3) {
+			decimal = decimal + '0';
+		}
+	}
+
+	result = int + '.' + decimal;
+	return result;
 }

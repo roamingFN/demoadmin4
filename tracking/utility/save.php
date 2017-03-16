@@ -14,9 +14,8 @@
 
 		foreach($data as $key=>$item) {
 				if($key!='oid' && $key!='oremark') {
-						
 						$stmt = $con->prepare($sql);
-						$stmt->bind_param('iissiddddiididiidd',$item['rec'],$item['rec'],$item['remark'],$_SESSION['ID'],$item['width'],$item['length'],$item['height'],$item['m3'],$item['weight'],$item['ptype'],$item['type'],$item['rate'],$item['stat'],$item['total'],$item['rateWeight'],$item['rateM3'],$key,$data['oid']);
+						$stmt->bind_param('iissiddddiididddii',$item['rec'],$item['rec'],$item['remark'],$_SESSION['ID'],$item['width'],$item['length'],$item['height'],$item['m3'],$item['weight'],$item['ptype'],$item['type'],$item['rate'],$item['stat'],$item['total'],$item['rateWeight'],$item['rateM3'],$key,$data['oid']);
 						$res = $stmt->execute();
 						
 						//update total in tracking

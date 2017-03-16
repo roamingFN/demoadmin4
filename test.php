@@ -504,8 +504,10 @@
 		}
 
 		echo getSIDCancel($con,66,'A16082900002');
+
+		echo '<button onclick="formatRate(\'22,348,023.26700\')">Rate';
 ?>
-</html>
+
 
 <script type="text/javascript">
 		// $('form').submit( function(event) {
@@ -529,4 +531,36 @@
 		     //    }
 		     // })
 		 });
+
+		function formatRate(val) {
+			if (typeof(val)=='undefined') return 0;
+			if (val=='') return 0;
+
+			var result = '';
+			var tmp = val.toString().split('.');
+			var int = tmp[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			
+			if (typeof(tmp[1])=='undefined') {
+				decimal = '0000';
+			}
+			else {
+				decimal = tmp[1];
+				var length = decimal.length;
+				if (length==1) {
+					decimal = decimal + '000';
+				}
+				else if (length==2) {
+					decimal = decimal + '00';
+				}
+				else if (length==3) {
+					decimal = decimal + '0';
+				}
+			}
+
+			result = int + '.' + decimal;		
+			console.log(result);
+			return result;
+		}
 </script>
+
+</html>
