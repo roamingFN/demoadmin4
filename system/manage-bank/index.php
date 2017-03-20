@@ -173,6 +173,64 @@ if (!isViewPermitted($formcode)) {
 	</div>
 
 <!-- ### MODAL ### -->
+<!-- search box -->
+<div class="modal fade" id="searchRate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">ค้นหา Bank Account</h4>
+			</div>
+			<div class="modal-body">
+				<form action="index.php" class="form-horizontal" method="post">
+					<div class="form-group">
+						<label class="col-md-3 control-label">Bank ID</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_bank_id" onkeypress="return isNumber(event)" >
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Account Name</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_account_name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Account No.</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_account_no">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Bank Name TH</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_bank_name_th">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Bank Name EN</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_bank_name_en">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Branch</label>
+						<div class="col-md-8 form-inline">
+							<input type="text" class="form-control" name="search_branch">
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-default">ค้นหา</button>
+				<a href="index.php"><button class="btn btn-default">แสดงทั้งหมด</button></a>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- add box -->
 <div class="modal fade" id="addRate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog">
@@ -184,7 +242,7 @@ if (!isViewPermitted($formcode)) {
 				<h4 class="modal-title">เพิ่ม Bank Account ใหม่</h4>
 			</div>
 			<div class="modal-body">
-				<form id="signupform" class="form-horizontal" role="form" method="post" >
+				<form id="signupform" class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 					
 					<div class="form-group">
 							<label class="col-md-3 control-label">Bank ID</label>
@@ -246,70 +304,25 @@ if (!isViewPermitted($formcode)) {
 							</div>
 					</div>
 
+					<div class="form-group">
+							<label class="col-md-3 control-label">Image</label>
+							<div class="col-md-8">
+									<div class="input-group">
+								        <input type="file" id="image_file" name="image_file" style="display: none">
+								        <input type="text" class="form-control" id="image_file_name" readonly style="background-color: #fff;">
+								        <span class="input-group-btn">
+								                    <button class="btn btn-default" type="button" id="image_file_button" style="background-color: #eee;">Browse...</button>
+								      	</span>
+							      </div>
+							</div>
+					</div>
+
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">ยกเลิก</button>
 				<button type="button" class="btn btn-primary" onclick="addBank();">บันทึก</button>
 				<span id="loading"></span>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- search box -->
-<div class="modal fade" id="searchRate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title">ค้นหา Bank Account</h4>
-			</div>
-			<div class="modal-body">
-				<form action="index.php" class="form-horizontal" method="post">
-					<div class="form-group">
-						<label class="col-md-3 control-label">Bank ID</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_bank_id" onkeypress="return isNumber(event)" >
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-3 control-label">Account Name</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_account_name">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-3 control-label">Account No.</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_account_no">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-3 control-label">Bank Name TH</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_bank_name_th">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-3 control-label">Bank Name EN</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_bank_name_en">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-3 control-label">Branch</label>
-						<div class="col-md-8 form-inline">
-							<input type="text" class="form-control" name="search_branch">
-						</div>
-					</div>
-			</div>
-			<div class="modal-footer">
-				<button type="submit" class="btn btn-default">ค้นหา</button>
-				<a href="index.php"><button class="btn btn-default">แสดงทั้งหมด</button></a>
-				</form>
 			</div>
 		</div>
 	</div>
@@ -420,7 +433,9 @@ function addBank(){
 		var bank_name_th = document.getElementById('bank_name_th').value;
 		var bank_name_en = document.getElementById('bank_name_en').value;
 		var branch = document.getElementById('branch').value;
-
+		var image_file = document.getElementById('image_file').files[0];
+		var image_name = document.getElementById('image_file_name').value;
+		
 		if (bankid == "") {
 			document.getElementById('help_bankid').innerText = "กรุณากรอก bank id";
 			flag = 1;
@@ -527,6 +542,7 @@ function addBank(){
 				}
 			}
 
+			/*
 			req.open("POST", "insert.php", true);	// ส่งค่าไปประมวลผลที่ไฟล์ sql.php
 			req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 			req.send("bankid="+bankid
@@ -535,7 +551,55 @@ function addBank(){
 				+"&bank_name_th="+bank_name_th
 				+"&bank_name_en="+bank_name_en
 				+"&branch="+branch
+				+"&image_name="+image_name
+				+"&image_file="+image_file
 			);
+			*/
+
+			/*var boundary = '---------------------------8721656041911415653955004498';
+			var data = 'Content-Type: multipart/form-data; boundary=' + boundary + '\r\n\r\n' +
+					
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="bankid"\r\n\r\n' + bankid + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="account_name"\r\n\r\n' + account_name + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="account_no"\r\n\r\n' + account_no + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="bank_name_th"\r\n\r\n' + bank_name_th + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="bank_name_en"\r\n\r\n' + bank_name_en + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="branch"\r\n\r\n' + branch + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="image_name"\r\n\r\n' + image_name + '\r\n' +
+
+					'--' + boundary + '\r\n' + 
+					'Content-Disposition: form-data; name="image_file" filename="' + image_name + '"\r\n' + 'Content-Type: application/octet-stream\r\n\r\n' + image_file + '\r\n' +
+
+					'--' + boundary + '--';
+
+			req.open("POST", "insert.php", true);
+			req.setRequestHeader("Content-type","multipart/form-data; charset=utf-8; boundary=" + boundary);
+			req.send(data);*/
+
+			var formData = new FormData();
+			formData.append('bankid', bankid);
+			formData.append('account_name', account_name);
+			formData.append('account_no', account_no);
+			formData.append('bank_name_th', bank_name_th);
+			formData.append('bank_name_en', bank_name_en);
+			formData.append('branch', branch);
+			formData.append('image_name', image_name);
+			formData.append('image_file', image_file);
+			req.open("POST", "insert.php", true);
+			req.send(formData);
 		}
 	}
 
@@ -556,6 +620,14 @@ $(document).ready(function() {
 						// Revalidate the date field
 						$('#eventForm').formValidation('revalidateField', 'customer-birthdate');
 				});
+
+		$('#image_file_button, #image_file_name').on('click', function() {
+			$('#image_file').trigger("click");
+	    });
+	    $('#image_file').change(function() {
+	    	var file_name = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+	    	$('#image_file_name').val(file_name);
+	    });
 });
 
 </script>

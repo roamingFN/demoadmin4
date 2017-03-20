@@ -241,7 +241,7 @@ function save() {
 						rateM3 = rate;
 				}
 				var stat = m3Table.find('input').eq(8).is(':checked')? 0: 1;
-				var total = m3Table.find("input").eq(7).val();
+				var total = m3Table.find("input").eq(7).val().replace(/,/g ,'');
 				var remark = $('.remark').find('textarea').eq(0).val();
 
 				//22/12/2016	add condition to check width/length/height/weight/rate/total

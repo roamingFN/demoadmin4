@@ -292,10 +292,8 @@
 				$icount = 0;
 				//used
 				if ($used==1) {
-					
-						$arrOid = getArrOid($con,$_POST['c-tid']);  
+						$arrOid = getArrOid($con,$_POST['c-tid']);
 						foreach ($arrOid as $key => $oid) {
-							
 								if (findPayment($con,$oid)) {
 										updatePaymentStat($con,$oid);
 										updateOrderStat($con,$oid);

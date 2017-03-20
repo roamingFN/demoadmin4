@@ -148,9 +148,9 @@
 					 	//find rate
 					 	$rate = getRate($con,$_userClass,$ptypeInfo[0]['rate_type'],$ptypeInfo[0]['product_type']);
 					 	if (isset($ptypeInfo[0]['rate_type']) && isset($ptypeInfo[0]['product_type']) && ($value['rateweight']==0||$value['ratem3']==0) && $defaultRate==0) {
-			          			foreach ($rate as $rid => $rateInfo) {
+			          			foreach ($rate as $rid => $rateInfo) { 
 			          					if ($value['type']==$rateInfo['rate_type'] && $ptypeInfo[0]['product_type']==$rateInfo['product_type']) {
-			          							if ($value['type']==1 && $value['weight']>=$rateInfo['begincal'] && $value['weight']<=$rateInfo['endcal']) { 
+			          							if ($value['type']==1 && $value['weight']>=$rateInfo['begincal'] && $value['weight']<=$rateInfo['endcal']) {
 			          									$defaultRate = $rateInfo['rate_amount'];
 			          									$_defaultRateWeight = $rateInfo['rate_amount'];
 			          							}
@@ -263,6 +263,7 @@
 						echo '<button class="backButton" onclick="location.href=\'./index.php\'" type="button">กลับ</button>';
 				echo '</div>';
 		$con->close();
+		//print_r($rate);
 		?>
 		
 		<script type="text/javascript">

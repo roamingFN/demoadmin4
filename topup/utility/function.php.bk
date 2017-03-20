@@ -78,7 +78,7 @@
 		}
 
 		function updatePaymentStat($con,$oid) {
-				$sql = 'UPDATE customer_request_payment SET payment_request_status=0 WHERE order_id=? AND payment_request_status=1';
+				$sql = 'UPDATE customer_request_payment SET payment_request_status=99 WHERE order_id=? AND payment_request_status=1';
 				$stmt = $con->prepare($sql);
 				$stmt->bind_param('i',$oid);
 				$res = $stmt->execute();
@@ -106,7 +106,6 @@
 				$stmt->execute();
 		}
 
-		
 		function getTopupDT($con,$tid) {
 			$dt = '0000-00-00 00:00:00';
 			if($stmt = $con->prepare('SELECT topup_date FROM customer_request_topup WHERE topup_id='.$tid)) {
