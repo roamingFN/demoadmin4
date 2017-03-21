@@ -16,13 +16,14 @@ $bankid = $_GET['bankid'];
 
 	//create new topup requset
 	if (!empty($_POST['edit-product-type'])) {
-
+		
 		//$producttypeid 		= $_POST['producttypeid'];
 		$account_name 	= $_POST['account_name'];
 		$account_no		= $_POST['account_no'];
 		$bank_name_th	= $_POST['bank_name_th'];
 		$bank_name_en	= $_POST['bank_name_en'];
 		$branch	= $_POST['branch'];
+		$image_name = $_POST['image_file_name'];
 
 		$SQL_QUERY = "update bank_payment set ";
 		$FIRST_VAR  = true;
@@ -67,10 +68,20 @@ $bankid = $_GET['bankid'];
 			$branch 	= mysql_real_escape_string($branch);
 			if (!$FIRST_VAR) { $SQL_QUERY .= ",";} else { $FIRST_VAR = false;}
 			$SQL_QUERY .= " bank_branch = '$branch' ";
+		}
+
+		if(!is_null($image_name)){
+			$branch 	= stripcslashes($image_name);
+			$branch 	= mysql_real_escape_string($image_name);
+			if (!$FIRST_VAR) { $SQL_QUERY .= ",";} else { $FIRST_VAR = false;}
+			$SQL_QUERY .= " bank_img = '$image_name' ";
 		}		
 
 		$SQL_QUERY .= " where bank_id = '$bankid' ";
 		$update_bank = mysql_query($SQL_QUERY);
+		if ($_FILES['image_file']['error']==0) {
+			move_uploaded_file ( $_FILES["image_file"]["tmp_name"], "../../css/images/bank/" . $_FILES ['image_file']['name'] );
+		}
 		if ($update_bank) {
 			echo '<div class="alert alert-success container" role="alert"><label>แก้ไขข้อมูลสำเร็จ</label></div>';
 		}
@@ -89,7 +100,11 @@ $bankid = $_GET['bankid'];
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
@@ -117,7 +132,7 @@ $bankid = $_GET['bankid'];
 			$bank = mysql_query("select * from bank_payment where bank_id ='$bankid'");
 			$row = mysql_fetch_array($bank);
 		?>
-			<input type="hidden" name="bankid" value="<?php echo $row['bankid']; ?>">
+			<input type="hidden" name="bankid" value="<?php echo $row['bank_id']; ?>">
 			<div class="form-group">
 				<label class="col-md-3 control-label">Bank Id</label>
 				<div class="col-md-8">
@@ -166,6 +181,19 @@ $bankid = $_GET['bankid'];
 			</div>
 
 			<div class="form-group">
+				<label class="col-md-3 control-label">Image</label>
+				<div class="col-md-8">
+						<div class="input-group">
+					        <input type="file" id="image_file" name="image_file" style="display: none">
+					        <input type="text" class="form-control" name="image_file_name" id="image_file_name" readonly style="background-color: #fff;" value="<?php echo $row['bank_img']; ?>">
+					        <span class="input-group-btn">
+					                    <button class="btn btn-default" type="button" id="image_file_button" style="background-color: #eee;">Browse...</button>
+					      	</span>
+				      </div>
+				</div>
+			</div>
+
+			<div class="form-group">
 				<label class="col-md-3 control-label"></label>
 				<div class="col-md-8">
 					<input type="submit" name="edit-product-type" class="btn btn-primary" value="บันทึก">
@@ -174,7 +202,16 @@ $bankid = $_GET['bankid'];
 
 		</form>
 	<br />
+
 <script type="text/javascript">
+	$('#image_file_button, #image_file_name').on('click', function() {
+		$('#image_file').trigger("click");
+    });
+    $('#image_file').change(function() {
+    	var file_name = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+    	$('#image_file_name').val(file_name);
+    });
+
 	$(document).ready(function() {
 		$('#datePicker')
 				.datepicker({

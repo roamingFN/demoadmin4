@@ -16,7 +16,11 @@ if (!isViewPermitted($formcode)) {
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
@@ -198,7 +202,7 @@ if (!isViewPermitted($formcode)) {
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-md-3 control-label">Account No.</label>
+						<label class="col-md-3 control-label">Account No</label>
 						<div class="col-md-8 form-inline">
 							<input type="text" class="form-control" name="search_account_no">
 						</div>
@@ -222,6 +226,7 @@ if (!isViewPermitted($formcode)) {
 						</div>
 					</div>
 			</div>
+
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-default">ค้นหา</button>
 				<a href="index.php"><button class="btn btn-default">แสดงทั้งหมด</button></a>
