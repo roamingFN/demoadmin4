@@ -164,6 +164,10 @@ function calM3() {
 		var height = $('#m3-table tbody tr').find('input').eq(2).val();
 
 		var m3 = (weight*length*height)/1000000;
+		// 12/04/2017 if m3 < 0.0000, set it to 0.0001
+		if (m3<0.0001) {
+			m3 = 0.0001;
+		}
 		$('#m3-table tbody tr').find('td').eq(3).text(m3.toFixed(4));
 		calTran();
 		calAvg();

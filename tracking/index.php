@@ -99,6 +99,10 @@
 										//init--------------------
 										$oid = $value['order_id'];
 										$m3 = $value['m3'];
+										// 12/04/2017 if m3 < 0.0000, set it to 0.0001
+						                if ($m3<0.0001) {
+											$m3 = 0.0001;
+										}
 										$kg = $value['weight'];
 										$ptid = $value['order_product_tracking_id'];
 										//calcurate---------------

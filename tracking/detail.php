@@ -189,6 +189,10 @@
 
 			                //calcurate---------------
 			                $m3 = ($value['width']*$value['length']*$value['height'])/1000000;
+			                // 12/04/2017 if m3 < 0.0000, set it to 0.0001
+			                if ($m3<0.0001) {
+								$m3 = 0.0001;
+							}
 			                $kg = $value['weight'];
 			                
 							if ($value['type']==2) {		//m3
