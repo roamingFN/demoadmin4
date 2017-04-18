@@ -177,6 +177,7 @@
 					if ($_adminFlg==1) {
 							echo '<a class="cctext" href="withdraw/withdraw.php"><i class="circleBrown material-icons">&#xE263;</i>Withdraw</a>';
 							echo '<a class="cctext" href="system"><i class="circlePink material-icons">&#xE869;</i>ข้อมูลพื้นฐาน</a>';
+							echo '<a class="cctext" href="order_status"><i class="circleOrange material-icons">&#xE065;</i>สถานะรายการ</a>';
 					}
 					else {
 							foreach ($_permission as $key => $value) {

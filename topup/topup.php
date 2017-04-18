@@ -4,7 +4,7 @@
 		<title>Top up</title>
 		<meta charset="utf-8">
 		<!--Jquery Datepicker Timepicker-->
-       	<link rel="stylesheet" href="../css/jquery-ui.css">
+       	<link rel="stylesheet" href="../css/jquery-ui.css" media="all"> 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="../js/jquery-ui.js"></script>
         <script src="../css/jquery-ui-timepicker-addon.min.css"></script>
@@ -23,10 +23,10 @@
 			});
 		</script>
                 
-		<link rel="stylesheet" type="text/css" href="../css/cargo.css">
-		<link rel="stylesheet" type="text/css" href="../css/w3-red.css">
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="../css/cargo.css"  media="all">
+		<link rel="stylesheet" type="text/css" href="../css/w3-red.css"  media="all">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" media="all">
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css' media="all">
 
 		<?php
 			session_start();
