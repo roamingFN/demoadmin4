@@ -17,8 +17,7 @@
 	            <tr><th>To :</th><td><input class="datepicker" name="to"/></td></tr>
 	            <tr><th>Status :</th><td><select name="status">
 	            		<option value="-">-</option>
-	                    <option value="0" selected><?php echo $_codes[0]?></option>
-	                    <option value="1"><?php echo $_codes[1]?></option>
+	                    <option value="5" selected><?php echo $_codes[5]?></option>
 				</select></td></tr>
 				<tr class="confirm"><td></td><td><a onclick="searchBox();">Cancel</a>&emsp;<button>Search</button></td></tr>
 			</table>

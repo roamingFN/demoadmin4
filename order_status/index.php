@@ -35,42 +35,6 @@
 			if ($_adminFlg==0) {
 					if (empty($_access) || $_access[0]->visible==0) header ("Location: ../login.php");
 			}
-           	
-           	function getCID($rs){
-               		include '../database.php';
-                	//get bank_payment
-                  	//get customer name
-             		$cus = array();
-					if($stmt = $con->prepare('SELECT customer_id,customer_firstname,customer_lastname FROM customer')){
-							$stmt->execute();
-							$stmt->bind_result($cid,$cfname,$clname);
-							while($stmt->fetch()){
-                 					$cus[$cid] = $cfname.' '.$clname;
-							}
-					}
-                  	//echo array_search($rs, $cBanks);
-                  	return array_search($rs, $cus);
-          	}
-
-          	function sendEmail($ono,$cmail,$cname) {
-				$strTo = $cmail;
-				$strSubject = '=?UTF-8?B?'.base64_encode('รายการสั่งซื้อหมายเลข '.$ono.' ของท่านได้ตรวจสอบเสร็จแล้ว').'?=';
-				$strHeader = "MIME-Version: 1.0\' . \r\n";
-				$strHeader .= "Content-type: text/html; charset=utf-8\r\n";
-				$strHeader .= "From: support@order2easy.com";
-				$strMessage = "สวัสดีค่ะ คุณ ".$cname."<br><br>".				
-				"&nbsp;&nbsp;&nbsp;รายการสั่งซื้อ ".$ono." ของท่านได้ตรวจสอบเสร็จเรียบร้อยแล้วนะคะ<br>".
-				"<br>ท่านสามารถดูรายละเอียดได้จากหน้ารายการสั่งซื้อของท่าน".
-				"<br>หากรายละเอียดรายการสั่งซื้อถูกต้อง โปรดชำระภายใน 7 วัน".
-				"<br>เพื่อทางเราจะได้ทำการจัดซื้อต่อไปค่ะ".
-				"<br>(หากลูกค้าไม่ชำระภายในเวลาที่กำหนด รายการสั่งซื้อนี้จะถูกยกเลิกค่ะ)".
-				"<br>สอบถามโทร 02-924-5850".			
-				"<br><br>order2easy".
-				"<br>เจ้าหน้าที่ผู้ตรวจสอบรายการ: ".$_SESSION['ID'].
-				"<br>".date('Y-m-d H:i:s');
-
-				@mail($strTo,$strSubject,$strMessage,$strHeader);
-			}
 
 			//search
           	$_SESSION['sql'] = '';
@@ -108,7 +72,7 @@
 			}
 			ini_set('display_errors', 1);
 			
-			$search = '';
+			$search = ' WHERE o.order_status_code=5';
 			$searchTotal = '';
 			if(sizeof($cases)>0){
 				$search = ' WHERE'.$cases[0];
@@ -128,29 +92,6 @@
                         
 			//delete
        		if(isset($_POST['del'])) {
-				/*$sqldel1 = 'DELETE FROM customer_order WHERE order_id='.$_POST['del'].';';
-       			$sqldel2 = 'DELETE FROM customer_order_product WHERE order_id='.$_POST['del'].';';
-       			$sqldel3 = 'DELETE FROM customer_order_product_tracking WHERE order_id='.$_POST['del'].';';
-       			$sqldel4 = 'DELETE FROM customer_order_shipping WHERE order_id='.$_POST['del'].';';
-       			$sqldel5 = 'DELETE FROM customer_request_payment WHERE order_id='.$_POST['del'].';';
-       			$sqldel6 = 'DELETE FROM customer_statement WHERE order_id='.$_POST['del'].';';
-				$stmt = $con->prepare($sqldel1);
-				$res = $stmt->execute();
-
-				$stmt = $con->prepare($sqldel2);
-				$res = $stmt->execute();
-
-				$stmt = $con->prepare($sqldel3);
-				$res = $stmt->execute();
-
-				$stmt = $con->prepare($sqldel4);
-				$res = $stmt->execute();
-
-				$stmt = $con->prepare($sqldel5);
-				$res = $stmt->execute();
-
-				$stmt = $con->prepare($sqldel6);
-				$res = $stmt->execute();*/
 				$sqldel = 'UPDATE customer_order SET order_status_code=99 WHERE order_id='.$_POST['del'].';';
 				$stmt = $con->prepare($sqldel);
 				$res = $stmt->execute();

@@ -168,10 +168,19 @@
 		
 		var orderId = <?php echo $oid; ?>;
 		function save() {
-
+			var save = [];
 			var data = {};
 			data['oid'] = orderId;
-			data['status'] = document.getElementById('status-'+orderId).options[document.getElementById('status-'+orderId).selectedIndex].value;;
+			data['status'] = document.getElementById('status-'+orderId).options[document.getElementById('status-'+orderId).selectedIndex].value;
+			<?php 
+				for($i=0;$i<sizeof($save);$i++){
+					echo 'save.push("'.$save[$i][0].'");';
+				}
+			?>
+			for(var i=0;i<save.length;i++) {
+				var id = save[i];
+				data[id] = {};
+			}
 			
 			var result = true;
 			var xhr = new XMLHttpRequest();
@@ -263,33 +272,28 @@
 			}
 			//cal
 			for(var i=0;i<opid.length;i++) {
-					//ck-opid
-					var ck = document.getElementById('ck-'+opid[i]).checked;
-					if (ck) {
-						//first 
-						var fquan = numberify(document.getElementById("quan1-"+opid[i]).value);
-						sumfQuan[shop[i]]+=Number(fquan);
+				var fquan = numberify(document.getElementById("quan1-"+opid[i]).value);
+				sumfQuan[shop[i]]+=Number(fquan);
 
-						//quan
-						var quan = numberify(document.getElementById("quan-"+opid[i]).value);
-						sumQuan[shop[i]]+=Number(quan);
-						//tran
-						var tran = numberify(document.getElementById("tran-"+opid[i]).value);
-						sumTran[shop[i]]+=Number(tran);
-						//amt
-						var amtCn = numberify(document.getElementById("totalCn-"+opid[i]).textContent);
-						sumCn[shop[i]]+=Number(amtCn);
-						//amt
-						var amtTh = numberify(document.getElementById("totalTh-"+opid[i]).textContent);
-						sumTh[shop[i]]+=Number(amtTh);
+				//quan
+				var quan = numberify(document.getElementById("quan-"+opid[i]).value);
+				sumQuan[shop[i]]+=Number(quan);
+				//tran
+				var tran = numberify(document.getElementById("tran-"+opid[i]).value);
+				sumTran[shop[i]]+=Number(tran);
+				//amt
+				var amtCn = numberify(document.getElementById("totalCn-"+opid[i]).textContent);
+				sumCn[shop[i]]+=Number(amtCn);
+				//amt
+				var amtTh = numberify(document.getElementById("totalTh-"+opid[i]).textContent);
+				sumTh[shop[i]]+=Number(amtTh);
 
-						//grand total
-						totalfQuan+=Number(fquan);
-						totalQuan+=Number(quan);
-						totalTran+=Number(tran);
-						totalCn+=Number(amtCn);
-						totalTh+=Number(amtTh);		
-					}
+				//grand total
+				totalfQuan+=Number(fquan);
+				totalQuan+=Number(quan);
+				totalTran+=Number(tran);
+				totalCn+=Number(amtCn);
+				totalTh+=Number(amtTh);
 			}
 			//show
 			for(var i=0;i<shop.length;i++) {
@@ -346,9 +350,17 @@
 				<td>สถานะรายการ :</td>
 				<td><?php //echo $codes[$code1];
 					echo '<select class="search-select" id="status-'.$oid.'">';
-					foreach($codes as $key=>$item) {
-						if($key==$code1) echo '<option value="'.$key.'" selected> '.$key.' - '.$item.'</option>';
-						else echo '<option value="'.$key.'"> '.$key.' - '.$item.'</option>';
+					// foreach($codes as $key=>$item) {
+					// 	if($key==$code1) echo '<option value="'.$key.'" selected> '.$key.' - '.$item.'</option>';
+					// 	else echo '<option value="'.$key.'"> '.$key.' - '.$item.'</option>';
+					// }
+					if ($code1==5) {
+						echo '<option value="5" selected> 5 - '.$codes[5].'</option>';
+						echo '<option value="6"> 6 - '.$codes[6].'</option>';
+					}
+					else if ($code1==6) {
+						echo '<option value="5"> 5 - '.$codes[5].'</option>';
+						echo '<option value="6" selected> 6 - '.$codes[6].'</option>';
 					} 
 					echo '</select>';
 					?>
@@ -382,11 +394,6 @@
 			foreach($shops as $key=>$item) {
 				echo '<table class="order-product">';
 				echo '<thead>';
-				if ($firstShop) {
-					echo '<th width="5%"></th>';
-					$firstShop = 0;
-				}
-				else echo '<th width="5%"></th>';
 				echo '<th width="2%">ลำดับ</th>'.
 					'<th width="8%">ภาพตัวอย่าง</th>'.
 					'<th width="5%">ขนาด</th>'.
@@ -461,7 +468,6 @@
 					}
 
 					echo '<tr class="'.($puncCount%2==0? 'punc ':'').($o_status==0? 'cancel ':'').'">'.
-						'<td width="2%"><input disabled type="checkbox" id="ck-'.$opid.'"'.$chkflg.'></td>'.
 						'<td align="center">'.$no.'</td>'.
 						'<td><div style="float:left;"><a href="showImg.php?pid='.$item[$i][21].'" onclick="window.open(\'showImg.php?pid='.$item[$i][21].'\', \'_balnk\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$item[$i][13].'"/></a></div>'.
 						'<div align="center"><a href="'.$item[$i][22].'" onclick="window.open(\''.$item[$i][22].'\', \'_blank\', \'width=+screen.height,height=+screen.height,fullscreen=yes\'); return false;"><img class="linkImg" height="20" width="20" src="../css/images/link.png"/></a><div></td>'.
@@ -506,7 +512,7 @@
 				'<td align="right" id="ttran-'.$shopid.'">'.number_format($tCnCost,2).'</td>'.
 				'<td align="right" id="tamtcn-'.$shopid.'">'.number_format($tamount,2).'</td>'.
 				'<td align="right" id="tamtth-'.$shopid.'">'.number_format($tthb,2).'</td>'.
-				'<td</td><td></td><td></td></tbody><br>';
+				'<td</td><td></td></tbody><br>';
 			}
 		
 		//grand total
@@ -518,7 +524,7 @@
 			'<td align="right" id="tTran"></td>'.
 			'<td align="right" id="tamountCn"></td>'.
 			'<td align="right" id="tamountTh"></td>'.
-			'<td></td><td></td></tbody></table><br>';
+			'<td></td></tbody></table><br>';
 
 		//comment
 		echo '<div style="text-align:center;overflow:hidden;position:relative;display:table;width:100%;">';
