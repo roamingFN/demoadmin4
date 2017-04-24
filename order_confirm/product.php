@@ -539,6 +539,7 @@
 		<h2 style="color:#FF9900"><b><a href="product.php?order_id=<?php echo $oid?>">รายการรอตรวจสอบ</a></b></h2>
         <h3 style="color:#FF9900"><a href="index.php">&larr; Back</a>  <a href="../index.php">&larr; Home</a></h3><br>
         <div class="menu">
+			<a href="#bottom">↓ไปล่างสุด</a>
 			<i class="material-icons" onclick="exportProduct(<?php echo $oid;?>);" title="Export">&#xE24D;</i>
 		</div>
         <table class="order-results" style="width:800px;">
@@ -685,7 +686,7 @@
 					echo '<tr class="'.($puncCount%2==0? 'punc ':'').($o_status==0? 'cancel ':'').'">'.
 						'<td width="2%"><input type="checkbox" id="ck-'.$opid.'"'.$chkflg.'></td>'.
 						'<td align="center">'.$no.'</td>'.
-						'<td><div style="float:left;"><a href="showImg.php?pid='.$item[$i][21].'" onclick="window.open(\'showImg.php?pid='.$item[$i][21].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$item[$i][13].'"/></a></div>'.
+						'<td><div style="float:left;"><a href="showImg.php?pid='.$item[$i][21].'" onclick="window.open(\'showImg.php?pid='.$item[$i][21].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$item[$i][13].'" title="'.$item[$i][18].' '.$item[$i][19].'"/></a></div>'.
 						'<div align="center"><a href="'.$item[$i][22].'" onclick="window.open(\''.$item[$i][22].'\', \'_blank\', \'type=fullWindow,width=+screen.height,height=+screen.height,fullscreen=yes\'); return false;"><img class="linkImg" height="20" width="20" src="../css/images/link.png"/></a><div></td>'.
 						'<td>'.$item[$i][18].'</td>'.
 						'<td>'.$item[$i][19].'</td>'.
@@ -884,7 +885,7 @@
 			
 ?>
 		<br>
-		<div><a href="#top">↑กลับสู่ด้านบน</a><div>
+		<div id="bottom"><a href="#top">↑กลับสู่ด้านบน</a><div>
 		<br><br>
 		<div align="center" style="width:600px;left:0;right:0;margin-left:auto;margin-right:auto;">
 			<?php
@@ -910,6 +911,7 @@
 		<br>
 		</body>
 </html>
+<BR><BR>
 <script>
 		$('.search-select').chosen();
 </script>

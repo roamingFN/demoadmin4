@@ -191,8 +191,7 @@
 				if(xhr.readyState==4 && xhr.status==200){
 					if(xhr.responseText=='success'){
                         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-						//location.reload();
-						window.location = 'index.php';
+						location.reload();
 					}else{
 						//alert('กรุณาใส่ข้อมูลให้ถูกต้องค่ะ!');
 						alert(xhr.responseText);
@@ -355,18 +354,11 @@
 					// 	if($key==$code1) echo '<option value="'.$key.'" selected> '.$key.' - '.$item.'</option>';
 					// 	else echo '<option value="'.$key.'"> '.$key.' - '.$item.'</option>';
 					// }
-					if ($code1==4) {
-						echo '<option value="4" selected> 4 - '.$codes[4].'</option>';
-						echo '<option value="5"> 5 - '.$codes[5].'</option>';
-						echo '<option value="6"> 6 - '.$codes[6].'</option>';
-					}
 					if ($code1==5) {
-						echo '<option value="4"> 4 - '.$codes[4].'</option>';
 						echo '<option value="5" selected> 5 - '.$codes[5].'</option>';
 						echo '<option value="6"> 6 - '.$codes[6].'</option>';
 					}
 					else if ($code1==6) {
-						echo '<option value="4"> 4 - '.$codes[4].'</option>';
 						echo '<option value="5"> 5 - '.$codes[5].'</option>';
 						echo '<option value="6" selected> 6 - '.$codes[6].'</option>';
 					} 
