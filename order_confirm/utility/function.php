@@ -72,44 +72,17 @@
 
 		function sendEmail($ono,$cmail,$cname,$total,$oid,$ccode,$cid,$uid,$con) {
 			include '../configPath.php';
-			
 			$userid = getuserid($con,$uid);
+			$banks = getBankPayment();
+			$full_url = "http://www.order2easy.com/".$_path_backend."/css/images/bank";
 
-			//set path
-			// $DIR = $_SERVER['HTTP_HOST'];
-			// $PATH = basename(__DIR__);
-			// $FILE = basename(__FILE__);
-
-			// $url = $_SERVER['SERVER_NAME'] . dirname(__FILE__);
-
-			// $array = explode('/',$url); 
-			// $count = count($array);
-			// $pmain = $array[$count-2];
-			
-			// $base_dir = __DIR__; // Absolute path to your installation, ex: /var/www/mywebsite
-			// $doc_root = preg_replace ( "!${_SERVER['SCRIPT_NAME']}$!", '', $_SERVER ['SCRIPT_FILENAME'] ); // ex: /var/www
-			// $base_url = preg_replace ( "!^${doc_root}!", '', $base_dir ); // ex: '' or '/mywebsite'
-			// $protocol = empty ( $_SERVER ['HTTPS'] ) ? 'http' : 'https';
-			// $port = $_SERVER ['SERVER_PORT'];
-			// $disp_port = ($protocol == 'http' && $port == 80 || $protocol == 'https' && $port == 443) ? '' : ":$port";
-			// $domain = $_SERVER ['SERVER_NAME'];
-
-			//$full_url = "${protocol}://${domain}${disp_port}${base_url}";
-			$full_url = "http://www.order2easy.com/".$_path_backend."/order_confirm/utility";
-			// if ($pmain=='public_html') {
-			// 	$actual_link = "http://".$_SERVER[HTTP_HOST]."/".$PATH."/css/images/bank/";
-			// }
-			// else {
-			// 	$actual_link = "http://".$_SERVER[HTTP_HOST]."/".$pmain."/css/images/bank/";
-			// }
 			//-----------------------------------------------------------------
-			$actual_link = "http://www.order2easy.com/".$_path_backend."/css/images/bank/";
 			$strTo = $cmail;
 			$strSubject = '=?UTF-8?B?'.base64_encode('รายการสั่งซื้อหมายเลข '.$ono.' ของท่านได้ตรวจสอบเสร็จแล้ว').'?=';
 			$strHeader = "MIME-Version: 1.0\' . \r\n";
 			$strHeader .= "Content-type: text/html; charset=utf-8\r\n";
 			$strHeader .= "From: Order2Easy <order2easy_admin@order2easy.com>";
-			$strMessage = "สวัสดีค่ะ คุณ ".$cname." (".$ccode.")<br><br>".				
+			$strMessage = "สวัสดีค่ะ คุณ ".$cname." (".$ccode.")<br><br>".	
 			"<table width='800px'>".
 				"<tr>
 					<td colspan='5'>รายการสั่งซื้อ <a href='".$_site_url."login.php?returnUrl=".$_site_url."order_show_detail_confirmed.php?order_id=".$oid."'>".$ono."</a> ของท่านได้ตรวจสอบเสร็จเรียบร้อยแล้วนะคะ</td>
@@ -162,48 +135,6 @@
 				</tr>".
 				"</table>".
 				"<table>".
-				// "<tr width='60px'>
-				// 	<td align='center'></td>
-				// 	<td><b>ธนาคาร</b></td>
-				// 	<td><b>เลขที่บัญชี</b></td>
-				// 	<td><b>ชื่อบัญชี</b></td>
-				// 	<td><b>สาขา</b></td>
-				// </tr>".
-				// "<tr>
-				// 	<td align='center'><img width='60px' height='30px' src='".$actual_link."kbank.png'></td>
-				// 	<td>กสิกร</td>
-				// 	<td>007-8-68567-0</td>
-				// 	<td>นาย ศิรพัชร ณรงค์วงศ์วัฒนา</td>
-				// 	<td>โลตัส บางกะปิ</td>
-				// </tr>".
-				// "<tr>
-				// 	<td align='center'><img width='60px' height='30px' src='".$actual_link."scb.png'></td>
-				// 	<td>ไทยพาณิชย์</td>
-				// 	<td>281-257812-8</td>
-				// 	<td>นาย ศิรพัชร ณรงค์วงศ์วัฒนา</td>
-				// 	<td>เดอะมอลล์ บางกะปิ 2</td>
-				// </tr>".
-				// "<tr>
-				// 	<td align='center'><img width='60px' height='30px' src='".$actual_link."bbl.png'></td>
-				// 	<td>กรุงเทพ</td>
-				// 	<td>234-4-68315-2</td>
-				// 	<td>นาย ศิรพัชร ณรงค์วงศ์วัฒนา</td>
-				// 	<td>เดอะมอลล์ บางกะปิ</td>
-				// </tr>".
-				// "<tr>
-				// 	<td align='center'><img width='60px' height='30px' src='".$actual_link."bay.png'></td>
-				// 	<td>กรุงศรี</td>
-				// 	<td>449-1-72094-0</td>
-				// 	<td>นาย ศิรพัชร ณรงค์วงศ์วัฒนา</td>
-				// 	<td>เดอะมอลล์ บางกะปิ</td>
-				// </tr>".
-				// "<tr>
-				// 	<td align='center'><img width='60px' height='30px' src='".$actual_link."/ktb.png'></td>
-				// 	<td>กรุงไทย</td>
-				// 	<td>762-0-46752-1</td>
-				// 	<td>นาย ศิรพัชร ณรงค์วงศ์วัฒนา</td>
-				// 	<td>เดอะมอลล์ บางกะปิ</td>
-				// </tr>".
 				"<tbody>
 					<tr>
 						<th style='background-color: #938953;width: 15%;'></th>
@@ -211,48 +142,58 @@
 						<th style='background-color: #938953;width: 150px; text-align: center;'>เลขที่บัญชี</th>
 						<th style='background-color: #938953;width: 250px; padding-left: 10px;'>ชื่อบัญชี</th>
 						<th style='background-color: #938953;width: 200px; padding-left: 10px;'>สาขา</th>
-					</tr>
-					<tr>
-						<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/kbank_logo.jpg'></td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กสิกรไทย</td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>007-8-68567-0</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
-							ณรงค์วงศ์วัฒนา</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>โลตัส บางกะปิ</td>
-					</tr>
-					<tr>
-						<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/scb_logo.jpg'></td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>ไทยพาณิชย์</td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>281-257812-8</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
-							ณรงค์วงศ์วัฒนา</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ2</td>
-					</tr>
-					<tr>
-						<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/bk_logo.jpg'></td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงเทพ</td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>234-4-68315-2</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
-							ณรงค์วงศ์วัฒนา</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
-					</tr>
-					<tr>
-						<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/krungsri_logo.jpg'></td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงศรี</td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>449-1-72094-0</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
-							ณรงค์วงศ์วัฒนา</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
-					</tr>
-					<tr>
-						<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/ktb_logo.jpg'></td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงไทย</td>
-						<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>762-0-46752-1</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
-							ณรงค์วงศ์วัฒนา</td>
-						<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
-					</tr>
-				</tbody>".
+					</tr>";
+					// "<tr>
+					// 	<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/kbank_logo.jpg'></td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กสิกรไทย</td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>007-8-68567-0</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
+					// 		ณรงค์วงศ์วัฒนา</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>โลตัส บางกะปิ</td>
+					// </tr>
+					// <tr>
+					// 	<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/scb_logo.jpg'></td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>ไทยพาณิชย์</td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>281-257812-8</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
+					// 		ณรงค์วงศ์วัฒนา</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ2</td>
+					// </tr>
+					// <tr>
+					// 	<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/bk_logo.jpg'></td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงเทพ</td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>234-4-68315-2</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
+					// 		ณรงค์วงศ์วัฒนา</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
+					// </tr>
+					// <tr>
+					// 	<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/krungsri_logo.jpg'></td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงศรี</td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>449-1-72094-0</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
+					// 		ณรงค์วงศ์วัฒนา</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
+					// </tr>
+					// <tr>
+					// 	<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/img/ktb_logo.jpg'></td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>กรุงไทย</td>
+					// 	<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>762-0-46752-1</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>นาย ศิรพัชร
+					// 		ณรงค์วงศ์วัฒนา</td>
+					// 	<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>เดอะมอลล์ บางกะปิ</td>
+					// </tr>".
+					foreach ($banks as $key => $value) {
+						$strMessage = $strMessage.
+						"<tr>
+							<td style='width: 70px; text-align: center;'><img style='width: 60%;' src='".$full_url."/".$value['bank_img']."'></td>
+							<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>".$value['bank_name_th']."</td>
+							<td style='width: 100px; text-align: center;font-size: 13px;font-family: tahoma;'>".$value['account_no']."</td>
+							<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>".$value['account_name']."</td>
+							<td style='width: 250px; padding-left: 10px;font-size: 13px;font-family: tahoma;'>".$value['bank_branch']."</td>
+						</tr>";
+					}
+			$strMessage = $strMessage."</tbody>".
 			"</table>".
 			"<br><br>order2easy".
 			"<br>เจ้าหน้าที่ผู้ตรวจสอบรายการ: ".$_SESSION['ID'].
@@ -261,8 +202,8 @@
 			$rs = mail($strTo,$strSubject,$strMessage,$strHeader);
 			if ($rs==false) echo 'Cannot send an Email, Please contact Admin.';
 
-			$subject = 'รายการสั่งซื้อหมายเลข '.$ono.' ของท่านได้ตรวจสอบเสร็จแล้ว';
-			
+			//insert message log
+			$subject = 'รายการสั่งซื้อหมายเลข '.$ono.' ของท่านได้ตรวจสอบเสร็จแล้ว';	
 			$sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link) VALUES (?,?,?,?,?,now(),1)';
 			if ($stmt = $con->prepare($sql)) {
 					$stmt->bind_param('iisss',$oid,$cid,$userid,$subject,$strMessage);
@@ -271,7 +212,6 @@
 			else {
 					echo $con->error;
 			}
-			$con->close();
 		}
 		
 		function getData($con,$sql,$condition,$orderBy,$groupBy,$paging) {
@@ -293,6 +233,21 @@
 					$dataSet[] = $row; 
 			}
 			return $dataSet;
+		}
+
+		function getBankPayment() {
+			include '../database.php';
+			$banks = array();
+			$sql = 'select * from bank_payment';
+			$queryResult = $con->query($sql); 
+			if (!$queryResult) {
+					echo ("Error while getting bank Payment ".$con->error);
+					return;
+			} 
+			while ($row = $queryResult->fetch_assoc()) {
+					$banks[] = $row; 
+			}
+			return $banks;
 		}
 
 ?>

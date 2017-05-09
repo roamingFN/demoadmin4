@@ -106,8 +106,8 @@
 			}
 			ini_set('display_errors', 1);
 			
-			$search = ' WHERE (o.order_status_code>2 AND o.order_status_code<7)';
-			//$search = ' WHERE (o.order_status_code=3)';
+			//$search = ' WHERE (o.order_status_code>2 AND o.order_status_code<7)';
+			$search = ' WHERE (o.order_status_code=3)';
 			$searchTotal = '';
 			if(sizeof($cases)>0){
 				$search = ' WHERE '.$cases[0];

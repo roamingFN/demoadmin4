@@ -40,7 +40,7 @@
 			shop_name,product_img,product_url,product_price,order_shipping_cn_box,order_shipping_rate,
 			product_size,product_color,comment,p.product_id,p.product_url,op.unitprice,
 			backshop_quantity,backshop_total_price,order_product_totalprice,remark_id,order_taobao
-			,op.first_unitprice,return_status,email_no,chkflg,tracking_company,om.paymore_status
+			,op.first_unitprice,return_status,email_no,chkflg,tracking_company,om.paymore_status,tracking_company
 			FROM customer_order_product op JOIN product p ON op.product_id=p.product_id
 			JOIN customer_order_shipping os ON op.order_id=os.order_id
 			LEFT JOIN customer_order_paymore om ON om.order_product_id=op.order_product_id
@@ -48,7 +48,7 @@
 			$stmt->execute();
 			$stmt->bind_result($opid,$cpp,$quan,$size,$weight,$ref,$cost,$comment,$upo,$status,$cause,
 				$bp,$bcost,$shop,$img,$url,$pp,$box,$osr,$pSize,$pColor,$comment,$pid,$purl,$unp,$backQuan,$backTot,
-				$opTot,$rid,$taobao,$funit,$rtstat,$emailno,$chkflg,$tracking_company,$pmStat);
+				$opTot,$rid,$taobao,$funit,$rtstat,$emailno,$chkflg,$tracking_company,$pmStat,$trckCom);
 			while($stmt->fetch()){
 				$enc = base64_encode($shop);
 				if(!isset($shops[$enc])){
@@ -56,7 +56,7 @@
 				}
 				array_push($shops[$enc],array($opid,$cpp,$quan,$size,$weight,$ref,$cost,$comment,$upo,$status,$cause,
 					$bp,$bcost,$img,$url,$pp,$box,$osr,$pSize,$pColor,$comment,$pid,$purl,$unp,$backQuan,$backTot,
-					$opTot,$rid,$taobao,$funit,$rtstat,$emailno,$chkflg,$tracking_company,$pmStat));
+					$opTot,$rid,$taobao,$funit,$rtstat,$emailno,$chkflg,$tracking_company,$pmStat,$trckCom));
 				if($status!=2) {
 					array_push($save,array($opid,$enc));
 					//for total by shop
@@ -1104,7 +1104,9 @@
 	<body>
 		<h2 style="color:#FF9900"><b><a href="product.php?order_id=<?php echo $oid?>">ดำเนินการสั่งซื้อ</a></b></h2>
         <h3 style="color:#FF9900"><a href="index.php">&larr; Back</a>  <a href="../index.php">&larr; Home</a></h3><br>
+	
         <div class="menu">
+		    <a href="#bottom">↓ไปล่างสุด</a>
 			<i class="material-icons" onclick="exportProduct(<?php echo $oid;?>);" title="Export">&#xE24D;</i>
 		</div>
         <div>
@@ -1220,14 +1222,21 @@
 				//shopname------------------------------------
 				$taobao = '';
 				$trckNo = '';
+				$company = '';
 				for($i=0;$i<sizeof($item);$i++) {
 						if (!empty($item[$i][28])) $taobao=$item[$i][28];
 						if (!empty($item[$i][5])) $trckNo=$item[$i][5];
+						$company = $item[$i][35];
+				}
+				if ($company!='') {
+					$pieces = explode(",", $company);
+					$company = $pieces[0];
 				}
 				echo '<thead class="shopname undivide">'.
 					'<th><button class="button-select" type="button" onclick="selectByShop(\''.$key.'\')">เลือกทั้งร้าน</th>'.
-					'<th colspan="10">'.'<span>ร้าน '.$shopid.'</span></th>'.
+					'<th colspan="8">'.'<span>ร้าน '.$shopid.'</span></th>'.
 					'<th colspan="3"><span>Taobao</span><input id="taobao-'.$key.'" value="'.$taobao.'" style="width:70%;text-align:right;"></th>'.
+					'<th colspan="2"><span>บริษัท</span><input id="com-'.$key.'" readonly value="'.$company.'" style="width:70%;text-align:right;"></th>'.
 					'<th colspan="4"><span>Tracking</span><input id="ref-'.$key.'" value="'.$trckNo.'" style="width:60%;text-align:right;"><i class="material-icons" onclick="add(\''.$key.'\');" title="Add">add_circle</i><input type="hidden" id="com-'.$key.'" value="'.$item[0][33].'"></th>'.
 					'</thead>';
 				
@@ -1494,7 +1503,7 @@
 			echo '</div>';
 		?>
 		<br>
-		<div><a href="#top">↑กลับสู่ด้านบน</a><div>
+		<div id="bottom"><a href="#top">↑กลับสู่ด้านบน</a><div>
 		<div align="center" style="left:0;right:0;margin-left:auto;margin-right:auto;">
 			<button class="order-button" onclick="save()">บันทึก</button>
 			<button class="order-cancel" onclick="cancel()">กลับ</button>
@@ -1699,6 +1708,7 @@
 			</div>
 		</div>
 </div>
+<BR><BR>
 </html>
 
 <?php

@@ -44,7 +44,7 @@
 				}
 		}
 
-		function exportExcel(){
+		function exportExcel() {
 				window.open('order_excel.php','_blank');
 		}
 

@@ -3,19 +3,19 @@
 				if ($valueTest[0]['shop_name']!=$data[0]['shop_name']) continue;
 				
 				echo '<span><h3>- Tracking '.$trackingNo.'</h3></span>';
-				echo '<table class="result green" id="'.$oid.'">';
+				echo '<table class="result orange" id="'.$oid.'">';
 				echo '<thead>';
 		        //echo '<tr><th colspan="8">ร้าน '.$key.'</th></tr>';
 		        echo '<tr>
-							<th>Tracking no.</th>
-							<th>รูปตัวอย่าง</th>
-							<th>จำนวนที่สั่ง</th>
-							<th>จำนวนที่รับแล้ว (รวม)</th>
-							<th>รับจริง</th>
-							<th>ขาดอีก</th>
-							<th>Last update by</th>
-							<th>Last edit date</th>
-						</tr>';
+						<th>Tracking no.</th>
+						<th>รูปตัวอย่าง</th>
+						<th>จำนวนที่สั่ง</th>
+						<th>จำนวนที่รับแล้ว (รวม)</th>
+						<th>รับจริง</th>
+						<th>ขาดอีก</th>
+						<th>Last update by</th>
+						<th>Last edit date</th>
+					</tr>';
 		       	echo '</thead>';
 
 		         //table detail====================================================
@@ -49,24 +49,24 @@
 				echo '</table>';
 
 				//table2-------------------------------------------------------
-				echo '<table class="result green" id="m3-table">';
+				echo '<table class="result orange" id="m3-table">';
 				echo '<thead>
-	            			<tr>
-									<th style="width:5%">กว้าง</th>
-									<th style="width:5%">ยาว</th>
-									<th style="width:5%">สูง</th>
-									<th style="width:8%">คิว</th>
-									<th style="width:8%">น้ำหนัก</th>
-									<th style="width:8%">ชนิดสินค้า</th>
-									<th>Type</th>
-									<th>เรท</th>
-									<th style="width:8%">ยอดค่าขนส่ง</th>
-									<th style="width:8%">ค่าเฉลี่ย</th>
-									<th style="width:100px;">สถานะ</th>
-									<th>User Add</th>
-									<th>Add Date</th>
-							</tr>
-	                </thead><tbody>';
+            			<tr>
+								<th style="width:5%;">กว้าง</th>
+								<th style="width:5%;">ยาว</th>
+								<th style="width:5%;">สูง</th>
+								<th style="width:8%;">คิว</th>
+								<th style="width:8%;">น้ำหนัก</th>
+								<th style="width:8%;">ชนิดสินค้า</th>
+								<th>Type</th>
+								<th>เรท</th>
+								<th style="width:8%;">ยอดค่าขนส่ง</th>
+								<th style="width:8%;">ค่าเฉลี่ย</th>
+								<th style="width:100px;">สถานะ</th>
+								<th>User Add</th>
+								<th>Add Date</th>
+						</tr>
+                </thead><tbody>';
 
 				foreach ($valueTest as $opid => $value) {
 						if ($value['masterflg']==0) continue;
@@ -141,30 +141,30 @@
 							else $dt = date_format(date_create($value['last_edit_date']),"d/m/Y H:i:s");
 					
 			                echo '<tr>
-										<td><input class="input m3" value='.$value['width'].$disabled.'></td>
-										<td><input class="input m3" value='.$value['length'].$disabled.'></td>
-										<td><input class="input m3" value='.$value['height'].$disabled.'></td>
-										<td class="number">'.number_format($m3,4,'.','').'</td>
-										<td><input class="input m3" value='.number_format($value['weight'],2,'.','').$disabled.'></td>';
-										echo '<td><select name="ptype"'.$disabled.'>
-												<option value="" selected="">-</option>';
-													foreach ($_productInfo as $keyOption => $option) {
-														if ($keyOption==$value['producttypeid']) {
-															echo '<option value="'.$keyOption.'" selected>'.$option.'</option>';
-														}
-														else {
-															echo '<option value="'.$keyOption.'">'.$option.'</option>';
-														}
+									<td><input class="input m3" value='.$value['width'].$disabled.'></td>
+									<td><input class="input m3" value='.$value['length'].$disabled.'></td>
+									<td><input class="input m3" value='.$value['height'].$disabled.'></td>
+									<td class="number">'.number_format($m3,4,'.','').'</td>
+									<td><input class="input m3" value='.number_format($value['weight'],2,'.','').$disabled.'></td>';
+									echo '<td><select name="ptype"'.$disabled.'>
+											<option value="" selected="">-</option>';
+												foreach ($_productInfo as $keyOption => $option) {
+													if ($keyOption==$value['producttypeid']) {
+														echo '<option value="'.$keyOption.'" selected>'.$option.'</option>';
 													}
-										echo '</select></td>';
-										echo '<td class="fixed"><div style="display:inline"><input name="type" class="type" type="checkbox" '.$checkedM3.' value="2" '.$disabled.'><span>M3</span><input name="type" class="type" type="checkbox" '.$checkedKg.' value="1" '.$disabled.'><span>Kg</span></div></td>
-										<td><input class="input m3" name="rate" value='.number_format($defaultRate,4,'.','').$disabled.'></td>
-										<td class="number">'.number_format($tran,2,'.','').'</td>
-										<td class="number">'.number_format($avg,2,'.','').'</td>
-										<td><div style="display:inline"><input name="stat" type="checkbox" '.$checkedIncom.$disabled.'><span>Incomplete</span><input name="stat" type="checkbox" '.$checkedCom.$disabled.'><span>complete</span></div></td>
-										<td>'.$value['uid'].'</td>
-										<td>'.$dt.'</td>
-									</tr>';
+													else {
+														echo '<option value="'.$keyOption.'">'.$option.'</option>';
+													}
+												}
+									echo '</select></td>';
+									echo '<td class="fixed"><div style="display:inline"><input name="type" class="type" type="checkbox" '.$checkedM3.' value="2" '.$disabled.'><span>M3</span><input name="type" class="type" type="checkbox" '.$checkedKg.' value="1" '.$disabled.'><span>Kg</span></div></td>
+									<td><input class="input m3" name="rate" value='.number_format($defaultRate,4,'.','').$disabled.'></td>
+									<td class="number">'.number_format($tran,2,'.','').'</td>
+									<td class="number">'.number_format($avg,2,'.','').'</td>
+									<td><div style="display:inline"><input name="stat" type="checkbox" '.$checkedIncom.$disabled.'><span>Incomplete</span><input name="stat" type="checkbox" '.$checkedCom.$disabled.'><span>complete</span></div></td>
+									<td>'.$value['uid'].'</td>
+									<td>'.$dt.'</td>
+								</tr>';
 				}
 				echo '</tbody>';
 				echo '</table>';

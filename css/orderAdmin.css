@@ -225,6 +225,10 @@ a:hover{
 		background: #E64A19;
 }
 
+.completeButton {
+		background: #0288D1;
+}
+
 .remark {
 		font-weight: bold;
 		font-size: 16px;

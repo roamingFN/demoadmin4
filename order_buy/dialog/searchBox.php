@@ -17,8 +17,8 @@
 	         	<tr><th>From :</th><td><input class="datepicker" name="from"/></td></tr>
 	            <tr><th>To :</th><td><input class="datepicker" name="to"/></td></tr>
 	            <tr><th>Status :</th><td><select name="status">
-	            		<option value="-">-</option>
-	                    <option value="3" selected><?php echo $_codes[3]?></option>
+	            		<option value="-" selected>-</option>
+	                    <option value="3"><?php echo $_codes[3]?></option>
 	                    <option value="4"><?php echo $_codes[4]?></option>
 	                    <option value="5"><?php echo $_codes[5]?></option>
 	                    <option value="6"><?php echo $_codes[6]?></option>

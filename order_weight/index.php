@@ -169,9 +169,10 @@
 			function calTotal(id) {
 					var quan = document.getElementById('quan-'+id).textContent;
 					var received = document.getElementById('rec-'+id).textContent;
-					var amount = document.getElementById('add-'+id).value;
-				
-					document.getElementById('missing-'+id).textContent = Number(quan) - (Number(received) + Number(amount));
+					var amount = Number(document.getElementById('add-'+id).value);
+					if (isNaN(amount)) amount=0;
+
+					document.getElementById('missing-'+id).textContent = Number(quan) - (Number(received) + amount);
 			}
 
 			function numberify(txt) {
@@ -238,7 +239,7 @@
 								return;
 						}
 						if ((weight=='') || (weight==0)) {
-								document.getElementById('height-'+tid).focus();
+								document.getElementById('weight-'+tid).focus();
 								alert('กรุณากรอกน้ำหนัก');
 								return;
 						}
@@ -294,7 +295,7 @@
 						var quan = document.getElementById('quan-'+tid).textContent;
 
 						var missing = parseInt(document.getElementById('missing-'+tid).textContent);
-						if (missing<0) {
+						if (missing<0 || missing>quan) {
 								alert('จำนวนรับเพิ่มเกินจำนวนที่สั่งได้');
 								document.getElementById('add-'+tid).focus();
 								return;
@@ -302,7 +303,7 @@
 
 						var amount = parseInt(document.getElementById('add-'+tid).value);
 						if (isNaN(amount)) {
-							alert('จำนวนต้องไม่เป็นค่าว่าง');
+							alert('จำนวนรับเพิ่มไม่ถูกต้อง');
 							document.getElementById('add-'+tid).focus();
 							return;
 						}
@@ -406,17 +407,17 @@
 									echo '<td align="center">'.$tno.'</td>';
 									if ($disable == 0) {
 										echo '<td>'.
-										'<input style="text-align:right;" class="weight" id="width-'.$tid.'" value="'.$width.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'width-'.$tid.'\')"/>'.
+										'<input style="text-align:right;" class="num" tid="'.$tid.'" id="width-'.$tid.'" value="'.$width.'" onclick="checkZero(this.value,\'width-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td>'.
-										'<input style="text-align:right;" class="length" id="length-'.$tid.'" value="'.$length.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'length-'.$tid.'\')"/>'.
+										'<input style="text-align:right;" class="num" tid="'.$tid.'" id="length-'.$tid.'" value="'.$length.'" onclick="checkZero(this.value,\'length-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td>'.
-										'<input style="text-align:right;" class="height" id="height-'.$tid.'" value="'.$height.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'height-'.$tid.'\')"/>'.
+										'<input style="text-align:right;" class="num" tid="'.$tid.'" id="height-'.$tid.'" value="'.$height.'" onclick="checkZero(this.value,\'height-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td style="text-align:right;" id="m3-'.$tid.'">'.number_format($m3,4).'</td>';
 										echo '<td>'.
-										'<input style="text-align:right;" class="weight" id="weight-'.$tid.'" value="'.$weight.'" onkeyup="this.value=numberify(this.value);" onclick="checkZero(this.value,\'weight-'.$tid.'\')"/>'.
+										'<input style="text-align:right;" class="weight" id="weight-'.$tid.'" value="'.$weight.'" onclick="checkZero(this.value,\'weight-'.$tid.'\')"/>'.
 										'<input type="hidden" id="tno" value='.$tno.'>'.
 										'<input type="hidden" id="oid-'.$tid.'" value='.$oid.'>'.
 										'<input type="hidden" id="ptid-'.$tid.'" value='.$ptid.'>'.
@@ -427,17 +428,17 @@
 									}
 									else {
 										echo '<td>'.
-										'<input disabled style="text-align:right;" class="weight" id="width-'.$tid.'" value="'.$width.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'width-'.$tid.'\')"/>'.
+										'<input disabled style="text-align:right;" tid="'.$tid.'" class="num" id="width-'.$tid.'" value="'.$width.'" onclick="checkZero(this.value,\'width-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td>'.
-										'<input disabled style="text-align:right;" class="length" id="length-'.$tid.'" value="'.$length.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'length-'.$tid.'\')"/>'.
+										'<input disabled style="text-align:right;" tid="'.$tid.'" class="num" id="length-'.$tid.'" value="'.$length.'"  onclick="checkZero(this.value,\'length-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td>'.
-										'<input disabled style="text-align:right;" class="height" id="height-'.$tid.'" value="'.$height.'" onkeyup="this.value=numberify(this.value);cal('.$tid.')" onclick="checkZero(this.value,\'height-'.$tid.'\')"/>'.
+										'<input disabled style="text-align:right;" tid="'.$tid.'" class="num" id="height-'.$tid.'" value="'.$height.'" onclick="checkZero(this.value,\'height-'.$tid.'\')"/>'.
 										'</td>';
 										echo '<td style="text-align:right;" id="m3-'.$tid.'">'.number_format($m3,4).'</td>';
 										echo '<td>'.
-										'<input disabled style="text-align:right;" class="weight" id="weight-'.$tid.'" value="'.$weight.'" onkeyup="this.value=numberify(this.value);" onclick="checkZero(this.value,\'weight-'.$tid.'\')"/>'.
+										'<input disabled style="text-align:right;" tid="'.$tid.'" class="weight" id="weight-'.$tid.'" value="'.$weight.'" onclick="checkZero(this.value,\'weight-'.$tid.'\')"/>'.
 										'<input type="hidden" id="tno" value='.$tno.'>'.
 										'<input type="hidden" id="oid-'.$tid.'" value='.$oid.'>'.
 										'<input type="hidden" id="ptid-'.$tid.'" value='.$ptid.'>'.
@@ -454,7 +455,7 @@
                 ?>
 		</table><br><br>
 
-		<!-- move to table -->
+		<!-- move to table /////////////////////////////////////////////////////////////////////////////////////////////// -->
 		<!-- Tracking No -->
 		<div style="text-align:center">
 			<label>Tracking No. : </label><input style="text-align:right" disabled class="weight-customer-code" type="text" value=<?php echo $_GET['tracking'] ?> >
@@ -514,12 +515,12 @@
 					
 									if($disrow == 0 || $disStatId==0) {
 										echo '<td>'.
-										'<input style="text-align:right;" class="amount" id="add-'.$tid.'" value="0" onkeyup="this.value=numberify(this.value);calTotal('.$tid.')" onclick="checkZero(this.value,\'add-'.$tid.'\')"/>'.
+										'<input style="text-align:right;" class="quan" id="add-'.$tid.'" value="0" tid="'.$tid.'" onclick="checkZero(this.value,\'add-'.$tid.'\')"/>'.
 										'</td>';
 									}
 									else {
 										echo '<td>'.
-										'<input disabled id="disme" style="text-align:right;" class="amount" id="add-'.$tid.'" value="0" onkeyup="this.value=numberify(this.value);calTotal('.$tid.')" onclick="checkZero(this.value,\'add-'.$tid.'\')"/>'.
+										'<input disabled id="disme" style="text-align:right;" class="quan" id="add-'.$tid.'" value="0"/>'.
 										'</td>';
 									}
 									echo '<td align="center" id="missing-'.$tid.'">'.($quantity-$amount).'</td>';
@@ -544,19 +545,89 @@
 			?>
 			<button class="order-cancel" onclick="cancel()">กลับ</button>
 		</div>
+		<br>
+		<br>
+		<br>
+
+		<?php
+			include './dialog/amountDialog.php';
+			include './dialog/searchDialog.php';
+			include './dialog/loading.php';
+			$con->close();
+		?>
+		<script src="./controller.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js"></script>
+		<script type="text/javascript">
+			$('.search-select').chosen();
+
+			$(document).ready(function() {
+	    		$(".num").keydown(function (e) {
+					// Allow: backspace, delete, tab, escape, enter and . and f5
+			        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 116, 190]) !== -1 ||
+			             // Allow: Ctrl+A
+			            (e.keyCode == 65 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+C
+			            (e.keyCode == 67 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+X
+			            (e.keyCode == 88 && e.ctrlKey === true) ||
+			             // Allow: home, end, left, right
+			            (e.keyCode >= 35 && e.keyCode <= 39)) {
+			                // let it happen, don't do anything
+			                cal($(this).attr('tid'));
+			                return;
+			        	}
+			        // Ensure that it is a number and stop the keypress
+			        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+			            e.preventDefault();
+			        }
+			        cal($(this).attr('tid'));
+		    	});
+		    	$(".weight").keydown(function (e) {
+					// Allow: backspace, delete, tab, escape, enter and . and f5
+			        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 116, 190]) !== -1 ||
+			             // Allow: Ctrl+A
+			            (e.keyCode == 65 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+C
+			            (e.keyCode == 67 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+X
+			            (e.keyCode == 88 && e.ctrlKey === true) ||
+			             // Allow: home, end, left, right
+			            (e.keyCode >= 35 && e.keyCode <= 39)) {
+			                // let it happen, don't do anything
+			                return;
+			        	}
+			        // Ensure that it is a number and stop the keypress
+			        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+			            	e.preventDefault();
+			        }
+		    	});
+		    	$(".quan").keydown(function (e) {
+					// Allow: backspace, delete, tab, escape, enter and . and f5
+			        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 116, 190]) !== -1 ||
+			             // Allow: Ctrl+A
+			            (e.keyCode == 65 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+C
+			            (e.keyCode == 67 && e.ctrlKey === true) ||
+			             // Allow: Ctrl+X
+			            (e.keyCode == 88 && e.ctrlKey === true) ||
+			             // Allow: home, end, left, right
+			            (e.keyCode >= 35 && e.keyCode <= 39)) {
+			                // let it happen, don't do anything
+			                return;
+			        	}
+			        if (e.keyCode==109 || e.keyCode==189) {
+			        	return;
+			    	}
+			        // Ensure that it is a number and stop the keypress
+			        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+			            e.preventDefault();
+			        }
+		    	});
+		    	$(".quan").keyup(function (e) {
+		    		calTotal($(this).attr('tid'));
+		    	});
+			});
+		</script>
 	</body>
-	<script src="./controller.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js"></script>
 </html>
-
-<?php
-		include './dialog/amountDialog.php';
-		include './dialog/searchDialog.php';
-		include './dialog/loading.php';
-		$con->close();
-?>
-
-<script type="text/javascript">
-		$('.search-select').chosen();
-</script>
 

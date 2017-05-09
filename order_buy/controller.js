@@ -404,7 +404,9 @@ function refund(opid){
 				}
 				//set all tracking
 				document.getElementById('ref-'+document.getElementById('tmpopid').value).value = trckTotal;
-
+				//set tracking
+				document.getElementById('com-'+document.getElementById('tmpopid').value).value = document.getElementById('company1').value;
+				
 				//clear opid tmp
 				document.getElementById('tmpopid').value = '';
 				document.getElementById('addBox').style.visibility = 'hidden';

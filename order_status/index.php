@@ -63,7 +63,7 @@
             if(!empty($_GET['status']) || ($_GET['status']=="0")) {
             		//echo $_GET['status'];
             		if ($_GET['status']=="-") {
-            				array_push($cases,' (o.order_status_code=0 or o.order_status_code=1)');
+            				array_push($cases,' (o.order_status_code=4 or o.order_status_code=5)');
             		}
             		else {
 							array_push($cases,' o.order_status_code= '.$_GET['status']);

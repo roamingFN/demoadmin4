@@ -1,78 +1,215 @@
 <?php
-		echo 	'<table class="result green">'.
-					'<thead>'.
-					'<th width="2%">ลำดับ</th>'.
-					'<th width="3%">ภาพตัวอย่าง</th>'.
-					'<th width="3%">จำนวน</th>'.
-					'<th width="5%">ราคา/ชิ้น (หยวน)</th>'.
-					'<th width="5%">ค่าขนส่งในจีน (หยวน)</th>'.
-					'<th width="7%">รวม (หยวน)</th>'.
-					'<th width="7%">รวม (บาท)</th>'.
-					'<th width="8%">สถานะการสั่ง</th>'.
-					'<th width="5%">จำนวนที่สั่งได้</th>'.
-					'<th width="5%">ราคาหลังร้าน (หยวน)</th>'.
-					'<th width="8%">รวม (หยวน)</th>'.
-					'<th width="5%">ค่ารถ (หยวน)</th>'.
-					'<th width="8%">รวมทั้งหมด (หยวน)</th>'.
-					'<th width="8%">รวมทั้งหมด (บาท)</th>'.
-					'<th width="8%">ยอดคืนเงิน (บาท)</th>'.
-					'<th>คืนเงิน</th>'.
-					'<th>สถานะ</th>'.
+		//company
+		$company = $data[0]['tracking_company'];
+		if ($company!='') {
+			$pieces = explode(",", $company);
+			$company = $pieces[0];
+		}
+
+		echo 	'<table class="quan result green" id="shop-'.$key.'">'.
 					'</thead>'.
 					'<thead>'.
-					'<th colspan="10" style="border:0px;">'.'<span>ร้าน '.$key.'</span></th>'.
-					'<th colspan="3" style="border:0px;"><span>Taobao</span><input class="input" value="'.$data[0]['taobao'].'" style="width:70%;text-align:right;"></th>'.
+					'<th colspan="9" style="border:0px;">'.'<span>ร้าน '.$key.'</span></th>'.
+					'<th colspan="4" style="border:0px;"><span>Taobao</span><input class="input" value="'.$data[0]['order_taobao'].'" style="width:70%;text-align:right;"></th>'.
+					'<th colspan="4" style="border:0px;"><span>บริษัท</span><input readonly class="input" value="'.$company.'" style="width:70%;text-align:right;"></th>'.
 					'<th colspan="4" style="border:0px;"><span>Tracking</span><input class="input" value="'.$data[0]['oTracking'].'" style="width:60%;text-align:right;"></th>'.
-					'</thead>';
+					'</thead>'.
+					'<thead>'.
+					'<tr>'.
+						'<th rowspan="2" width="3%" style="background-color: #cc7a00;">ลำดับ</th>'.
+						'<th rowspan="2" width="4%" style="background-color: #cc7a00;">ภาพตัวอย่าง</th>'.
+						'<th rowspan="2" width="4%" style="background-color: #cc7a00;">จำนวน</th>'.
+						'<th rowspan="2" width="4%" style="background-color: #cc7a00;">ราคา/ชิ้น (หยวน)</th>'.
+						'<th rowspan="2" width="4%" style="background-color: #cc7a00;">ค่าขนส่งในจีน (หยวน)</th>'.
+						//'<th width="7%">รวม (หยวน)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #cc7a00;">รวม (บาท)</th>'.
+						//'<th width="8%">สถานะการสั่ง</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">จำนวนที่สั่งได้</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">ราคาหลังร้าน (หยวน)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">รวม (หยวน)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">ค่ารถ (หยวน)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">รวมทั้งหมด (หยวน)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">รวมทั้งหมด (บาท)</th>'.
+						'<th rowspan="2" width="5%" style="background-color: #4d636f;">ยอดคืนเงิน (บาท)</th>'.
+						'<th rowspan="2" style="background-color: #4d636f;">คืนเงิน</th>'.
+						//'<th>สถานะ</th>'.
+						'<th colspan="5">ร้านคืนเงิน</th>'.
+						'<th rowspan="2">จำนวนที่ได้รับไม่ครบ</th>'.
+						'<th rowspan="2">ยอดเสียหาย (บาท)</th>'.
+					'</tr>'.
+					'<tr>'.
+						'<th>จำนวน</th>'.
+						'<th>ราคาต่อชิ้น</th>'.
+						'<th>รวม (หยวน)</th>'.
+						'<th>รวม (บาท)</th>'.
+						'<th>ร้านคืนจริง (หยวน)</th>'.
+					'</tr>';
 
 		//shopname------------------------------------
+		$totalQuan = 0;
+		$totalTran = 0;
+		$totalPrice = 0;
+		$totalBackQuan = 0;
+		$totalBackPrice = 0;
+		$totalBackTran = 0;
+		$totalGrandYuan = 0;
+		$totalGrandBaht = 0;
+		$totalReturn = 0;
+		$totalReturnQuan = 0;
+		$totalReturnYuan = 0;
+		$totalReturnBaht = 0;
+		$totalReturnYuan2 = 0;
+		$totalMissing = 0;
+		$totalMissingBaht = 0;
 		$no = 1;
 		$tmpArray = array();
 		echo '<tbody>';
-		foreach ($data as $opid => $value) { 
-				if (array_key_exists($value['order_product_id'], $tmpArray)) continue;
-				$tmpArray[$value['order_product_id']]="";
-				if ($value['order_status']==1) {
-						$option = '<div style="display:inline">'.
-									'<input disabled style="width:auto" type="checkbox" value="1" checked><label> ได้</label>'.
-								'</div>'.
-								'&nbsp;&nbsp;<div style="display:inline">'.
-									'<input disabled style="width:auto" type="checkbox" value="2"><label> ไม่ได้</label>'.
-								'</div>';
-				}
-				else {
-						$option = '<div style="display:inline">'.
-									'<input disabled style="width:auto" type="checkbox" value="1"><label> ได้</label>'.
-								'</div>'.
-								'&nbsp;&nbsp;<div style="display:inline">'.
-									'<input disabled style="width:auto" type="checkbox" value="2" checked><label> ไม่ได้</label>'.
-								'</div>';
-				}
+		foreach ($data as $value) {
+			if (array_key_exists($value['order_product_id'], $tmpArray)) continue;
+			$tmpArray[$value['order_product_id']]="";
+			if ($value['order_status']==1) {
+					$option = '<div style="display:inline">'.
+								'<input disabled style="width:auto" type="checkbox" value="1" checked><label> ได้</label>'.
+							'</div>'.
+							'&nbsp;&nbsp;<div style="display:inline">'.
+								'<input disabled style="width:auto" type="checkbox" value="2"><label> ไม่ได้</label>'.
+							'</div>';
+			}
+			else {
+					$option = '<div style="display:inline">'.
+								'<input disabled style="width:auto" type="checkbox" value="1"><label> ได้</label>'.
+							'</div>'.
+							'&nbsp;&nbsp;<div style="display:inline">'.
+								'<input disabled style="width:auto" type="checkbox" value="2" checked><label> ไม่ได้</label>'.
+							'</div>';
+			}
+			$opid = $value['order_product_id'];
+			$trackingid = $value['order_product_tracking_id'];
+			//return
+			$return_yuan = $value['return_quantity']*$value['backshop_price'];
+			$return_baht = $return_yuan*$value['order_rate'];
+			$missing = $value['backshop_quantity']-$value['return_quantity']-$value['received_amount'];
+			$missing_baht = $missing*$value['backshop_price']*$value['order_rate']; 
 
-				echo '<tr class="none">'.
-						'<td align="center" class="none">'.$no.'</td>'.
-						'<td><div style="float:left;"><a href="showImg.php?pid='.$value['product_img'].'" onclick="window.open(\'showImg.php?pid='.$value['product_url'].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$value['product_img'].'" title="'.$value['product_color'].' '.$value['product_size'].'"/></a></div>'.
-						'<div align="center"><a href="'.$value['product_url'].'" onclick="window.open(\''.$value['product_url'].'\', \'_blank\', \'width=+screen.height,height=+screen.height,fullscreen=yes\'); return false"><img class="linkImg" height="20" width="20" src="../css/images/link.png"/></a></div></td>'.
-						'<td align="right">'.$value['quantity'].'</td>'.		//quanltity
-						'<td align="right">'.number_format($value['unitprice'],2).'</td>'.	//price
-						'<td align="right">'.number_format($value['order_shipping_cn_cost'],2).'</td>'.											//transport china cost
-						'<td align="right">'.number_format($value['order_product_totalprice']/$value['order_rate'],2).'</td>'.							//total chinese
-						'<td align="right">'.number_format($value['order_product_totalprice'],2).'</td>'.					//total thai	
-						'<td align="center">'.$option.'</td>';
-						echo '</select></td>'.
-						'<td>'.$value['backshop_quantity'].'</td>'.		//quanltity
-						'<td class="number">'.$value['backshop_price'].'</td>'.	//price
-						'<td align="right">'.number_format(($value['backshop_total_price']/$value['order_rate'])-$value['backshop_shipping_cost'],2).'</td>'. //total yuan
-						'<td class="number">'.number_format($value['backshop_shipping_cost'],2).'</td>'.		//transport china cost
-						'<td align="right">'.number_format(($value['backshop_total_price']/$value['order_rate']),2).'</td>'.
-						'<td align="right">'.number_format($value['backshop_total_price'],2).'</td>'.
-						'<td class="number">'.number_format($value['return_baht'],2).'</td>'.
-						'<td class="center green"><a>ตกลง</a> <a>กลับ</a></td>'.
-						'<td>'.($value['return_status']==2?'คืนแล้ว':'').'</td>';
-						$no++;
-				echo '</tr>';
+			echo '<tr class="none" id="'.$trackingid.'">'.
+					'<td align="center" class="none">'.$no.'</td>'.
+					'<td><div style="float:left;"><a href="showImg.php?pid='.$value['product_img'].'" onclick="window.open(\'showImg.php?pid='.$value['product_url'].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$value['product_img'].'" title="'.$value['product_color'].' '.$value['product_size'].'"/></a></div>'.
+					'<div align="center"><a href="'.$value['product_url'].'" onclick="window.open(\''.$value['product_url'].'\', \'_blank\', \'width=+screen.height,height=+screen.height,fullscreen=yes\'); return false"><img class="linkImg" height="20" width="20" src="../css/images/link.png"/></a></div></td>'.
+					'<td align="right">'.$value['quantity'].'</td>'.		//quanltity
+					'<td align="right">'.number_format($value['unitprice'],2).'</td>'.	//price
+					'<td align="right">'.number_format($value['order_shipping_cn_cost'],2).'</td>'.											//transport china cost
+					//'<td align="right">'.number_format($value['order_product_totalprice']/$value['order_rate'],2).'</td>'.							//total chinese
+					'<td align="right">'.number_format($value['order_product_totalprice'],2).'</td>'.					//total thai	
+					//'<td align="center">'.$option.'</td>';
+					//echo '</select></td>'.
+					'<td align="right">'.$value['backshop_quantity'].'</td>'.		//quanltity
+					'<td class="number">'.$value['backshop_price'].'</td>'.	//price
+					'<td align="right">'.number_format(($value['backshop_total_price']/$value['order_rate'])-$value['backshop_shipping_cost'],2).'</td>'. //total yuan
+					'<td class="number">'.number_format($value['backshop_shipping_cost'],2).'</td>'.		//transport china cost
+					'<td align="right">'.number_format(($value['backshop_total_price']/$value['order_rate']),2).'</td>'.
+					'<td align="right">'.number_format($value['backshop_total_price'],2).'</td>'.
+					'<td class="number">'.number_format($value['return_baht'],2).'</td>'.
+					'<td class="center green"><a>ตกลง</a> <a>กลับ</a></td>';
+					//'<td>'.($value['return_status']==2?'คืนแล้ว':'').'</td>';
+					if ($value['backshop_quantity']==$value['received_amount']) {
+						echo '<td><input style="border-bottom: 0px;" disabled class="input return return1" shop="'.$key.'" value='.$value['return_quantity'].'></td>';
+					}
+					else {
+						echo '<td><input class="input return return1" shop="'.$key.'" value='.$value['return_quantity'].'></td>';
+					}
+			echo	'<td class="number">'.number_format($value['backshop_price'],2).'</td>'.
+					'<td class="number">'.number_format($return_yuan,2).'</td>'.
+					'<td class="number">'.number_format($return_baht,2).'</td>'.
+					'<td><input class="input return return2" shop="'.$key.'" value='.$value['return_yuan'].'></td>'.
+					'<td class="number">'.$missing.'</td>'.
+					'<td class="number">'.number_format($missing_baht,2).'</td>';
+					echo '<input type="hidden" value='.$value['received_amount'].'>';
+					echo '<input type="hidden" value='.$value['order_rate'].'>';
+					echo '<input id="opid-'.$trackingid.'" type="hidden" value="'.$opid.'">';
+					echo '<input id="backReturn-'.$trackingid.'" type="hidden" value='.$value['return_yuan'].'>';
+					$no++;
+			echo '</tr>';
+
+			$totalQuan += $value['quantity'];
+			$totalPrice += $value['order_product_totalprice'];
+			$totalTran += $value['order_shipping_cn_cost'];
+
+			$totalBackQuan += $value['backshop_quantity'];
+			$totalBackPrice += ($value['backshop_total_price']/$value['order_rate']);
+			$totalBackTran += $value['backshop_shipping_cost'];
+			$totalGrandYuan += ($value['backshop_total_price']/$value['order_rate']);
+			$totalGrandBaht += $value['backshop_total_price'];
+			$totalReturn += $value['return_baht'];
+
+			$totalReturnQuan += $value['return_quantity'];
+			$totalReturnYuan += $return_yuan;
+			$totalReturnBaht += $return_baht;
+			$totalReturnYuan2 += $value['return_yuan'];
+			$totalMissing += $missing;
+			$totalMissingBaht += $missing_baht;
 		}
 		echo '</tbody>';
+
+		//footer--------------------------------------------------------------
+		echo '<tfoot style="text-align: right;color: black;">';
+			echo '<td>ยอดรวม</td>';
+			echo '<td></td><td>'.$totalQuan.'</td>';
+			echo '<td></td><td>'.number_format($totalTran,2).'</td>';
+			echo '<td>'.number_format($totalPrice,2).'</td>';
+			echo '<td>'.$totalBackQuan.'</td>';
+			echo '<td></td><td>'.number_format($totalBackPrice,2).'</td>';
+			echo '<td>'.number_format($totalBackTran,2).'</td>';
+			echo '<td>'.number_format($totalGrandYuan,2).'</td>';
+			echo '<td>'.number_format($totalGrandBaht,2).'</td>';
+			echo '<td>'.number_format($totalReturn,2).'</td><td></td>';
+			echo '<td id="returnQuan-'.$key.'">'.$totalReturnQuan.'</td>';
+			echo '<td></td><td id="returnYuan-'.$key.'">'.number_format($totalReturnYuan,2).'</td>';
+			echo '<td id="missingBaht-'.$key.'">'.number_format($totalReturnBaht,2).'</td>';
+			echo '<td id="returnYuan2-'.$key.'">'.number_format($totalReturnYuan2,2).'</td>';
+			echo '<td id="missing-'.$key.'">'.$totalMissing.'</td>';
+			echo '<td id="missingBaht-'.$key.'">'.number_format($totalMissingBaht,2).'</td>';
+		echo '</tfoot>';
 		echo '</table>';
 
+		//grandTotal
+		$grandTotalMissingBaht += $totalMissingBaht;
+		$grandTotalReturnYuan2 += $totalReturnYuan2;
 ?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".return").keydown(function (e) {
+			// Allow: backspace, delete, tab, escape, enter and . and f5
+	        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 116, 190]) !== -1 ||
+	             // Allow: Ctrl+A
+	            (e.keyCode == 65 && e.ctrlKey === true) ||
+	             // Allow: Ctrl+C
+	            (e.keyCode == 67 && e.ctrlKey === true) ||
+	             // Allow: Ctrl+X
+	            (e.keyCode == 88 && e.ctrlKey === true) ||
+	             // Allow: home, end, left, right
+	            (e.keyCode >= 35 && e.keyCode <= 39)) {
+	                // let it happen, don't do anything
+	                return;
+	        	}
+	        // Ensure that it is a number and stop the keypress
+	        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+	            	e.preventDefault();
+	        }
+		});
+
+		$(".return1").keyup(function (e) {
+			calReturn($(this).attr('shop'));
+		});
+
+		$(".return2").keyup(function (e) {
+			calReturn2($(this).attr('shop'));
+		});
+
+		$(".return").click(function (){
+			if ($(this).val()==0) {
+				$(this).val('');
+			}
+		});
+	});
+</script>
