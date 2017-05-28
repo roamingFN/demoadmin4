@@ -63,7 +63,31 @@
 		return $result;
 	}
 
+	function isCompletedTracking($con,$optid) {
+		$result = false;
+		$sql = 'SELECT statusid FROM customer_order_product_tracking WHERE order_product_tracking_id=? AND masterflg=1';
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('i',$optid);
+		$stmt->execute();
+		$stmt->bind_result($status);
+		while($stmt->fetch()) {
+			if ($status==1) {
+				$result = true;
+			}
+		}
+		return $result;
+	}
+
+	//check tracking status is already completed then refresh
 	$data = json_decode($_POST['data1'],true);
+	foreach($data as $key=>$item) {
+		if (isCompletedTracking($con,$key)) {
+			echo 'ไม่สามารถบันทึกได้ เนื่องจาก Tracking นี้มีสถานะ Completed แล้ว';
+			return;
+		}
+	}
+
+	//update width length height only masterflg=1
 	$sql = 'UPDATE customer_order_product_tracking'. 
 		' SET width=?,length=?,height=?,m3=?,weight=?,remark=?,total_in_tracking=?'.
 		' WHERE order_product_tracking_id=? AND masterflg=1';
@@ -82,6 +106,7 @@
 			}
 	}
 
+	//update received-----------------------------------------------------------------------------------------------------
 	$data = json_decode($_POST['data2'],true);
 	$sql = 'UPDATE customer_order_product_tracking'. 
 		' SET received_amount=received_amount+?, uid=?, last_edit_date=now()'.

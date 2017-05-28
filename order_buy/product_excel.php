@@ -12,7 +12,7 @@
         include '../database.php';
         include './function.php';
         if (isset($_GET['order_id'])) {
-                $sql = 'SELECT p.product_name,p.product_size,p.product_color,pt.producttypename,op.first_unitquantity,op.quantity,op.first_unitprice,op.unitprice,op.order_shipping_cn_cost,op.order_product_totalprice,op.order_status,r.remark_tha,o.order_rate,op.backshop_quantity,op.backshop_price,op.backshop_shipping_cost,op.backshop_total_price,op.order_taobao,op.order_shipping_cn_ref_no,op.return_baht,op.return_status,o.order_number
+                $sql = 'SELECT p.product_name,p.product_size_china,p.product_color_china,pt.producttypename,op.first_unitquantity,op.quantity,op.first_unitprice,op.unitprice,op.order_shipping_cn_cost,op.order_product_totalprice,op.order_status,r.remark_tha,o.order_rate,op.backshop_quantity,op.backshop_price,op.backshop_shipping_cost,op.backshop_total_price,op.order_taobao,op.order_shipping_cn_ref_no,op.return_baht,op.return_status,o.order_number
                 FROM customer_order_product op JOIN product p ON op.product_id=p.product_id
                 LEFT JOIN product_type pt ON op.producttypeid=pt.producttypeid
                 JOIN order_remark r ON op.remark_id=r.remark_id

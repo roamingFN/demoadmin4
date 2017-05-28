@@ -90,7 +90,7 @@
 						$sql2 = 'SELECT ot.order_product_tracking_id,ot.tracking_no,ot.order_product_id,ot.order_id,ot.received_amount'. 
 						',op.backshop_quantity, c.customer_code'. 
 						',p.product_name,p.product_img,p.product_url,p.shop_name'. 
-						',o.order_number, o.customer_id, ot.uid, ot.last_edit_date'. 
+						',o.order_number, o.customer_id, ot.uid, ot.last_edit_date,p.product_color,p.product_size'. 
 						' FROM customer_order_product_tracking ot'. 
 						' JOIN customer_order_product op ON ot.order_product_id=op.order_product_id'. 
 						' JOIN product p ON op.product_id=p.product_id'. 
@@ -101,7 +101,7 @@
 						' ORDER BY o.order_number,ot.order_product_tracking_id ASC';
 						if ($stmt = $con->prepare($sql2)) {
                 			$stmt->execute();
-                			$stmt->bind_result($tid,$tno,$opid,$oid,$amount,$quantity,$ccode,$pname,$pimg,$purl,$sname,$ono,$customerID,$userID, $lastEditDate);
+                			$stmt->bind_result($tid,$tno,$opid,$oid,$amount,$quantity,$ccode,$pname,$pimg,$purl,$sname,$ono,$customerID,$userID, $lastEditDate,$pColor,$pSize);
                 			while ($stmt->fetch()) {
                 				array_push($_save2,$tid);
                 				$_shopName = $sname;
@@ -173,6 +173,27 @@
 					if (isNaN(amount)) amount=0;
 
 					document.getElementById('missing-'+id).textContent = Number(quan) - (Number(received) + amount);
+
+					//cal total
+					var addTotal = 0;
+					var missingTotal = 0;
+					$('.received tbody tr').each(function () {
+						var add = Number($(this).find("input").eq(0).val());
+						if (isNaN(add)) add=0;
+						addTotal += add;
+
+						var missing = Number($(this).find("td").eq(6).text());
+						console.log(missing);
+						missingTotal += missing;
+					});
+					$('.received tfoot').find("td").eq(4).text(addTotal);
+					$('.received tfoot').find("td").eq(5).text(missingTotal);
+
+			}
+
+			function numberWithCommas(x) {
+				//console.log(Number(x).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+				return Number(x).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
 
 			function numberify(txt) {
@@ -262,7 +283,6 @@
 				var data2 = {};
 				
 				<?php
-
 					for($i=0;$i<sizeof($_save2);$i++) {
 						echo 'save2.push("'.$_save2[$i].'");';
 					}
@@ -328,6 +348,7 @@
 						} else{
 							//alert('กรุณาใส่ข้อมูลให้ถูกต้องค่ะ!');
 							alert(xhr.responseText);
+							location.reload();
 						}
 					}
 				};
@@ -471,15 +492,20 @@
        	 <!-- <table class="order-product" -->
                 <?php 
             			if ($stmt = $con->prepare($sql2)) {
-                			$stmt->execute();
-                			$stmt->bind_result($tid,$tno,$opid,$oid,$amount,$quantity,$ccode,$pname,$pimg,$purl,$sname,$ono,$customerID,$userID, $lastEditDate);
-							$puncCount = 0;
+            				$puncCount = 0;
 							$onoTmp = '';
 							$temp = '';
 							$disrow = 0;
+							$totalQuan = 0;
+							$totalReceived = 0;
+							$totalAdd = 0;
+							$totalMissing = 0;
+
+                			$stmt->execute();
+                			$stmt->bind_result($tid,$tno,$opid,$oid,$amount,$quantity,$ccode,$pname,$pimg,$purl,$sname,$ono,$customerID,$userID, $lastEditDate,$pColor,$pSize);
 							while ($stmt->fetch()) {
 									if ($onoTmp!=$ono||$onoTmp=='') {
-										echo '<table class="order-product">';
+										echo '<table class="order-product received">';
 										echo '<thead>';
 										echo '<br><th colspan="9"style="text-align:left;background-color:white;color:black"><div>'.
 											'Customer Code : '.$ccode.
@@ -490,6 +516,7 @@
 										
 						                echo '<tr><th>Tracking no.</th>'.
 						                	'<th>รูปตัวอย่าง</th>'.
+						                	'<th>สี/ไซด์</th>'.
 						                	'<th>จำนวนที่สั่ง</th>'.
 											'<th>จำนวนที่รับแล้ว</th>'.
 											'<th>รับเพิ่ม</th>'.
@@ -510,6 +537,7 @@
 									echo '<tr class="'.($puncCount%2==0? 'punc ':'').'">';
 									echo '<td align="center">'.$tno.'</td>';
 									echo '<td align="center"><a href="'.$purl.'" target="_blank"><img height="150" width="150" src="'.$pimg.'"/></a></td>';
+									echo '<td align="center">'.$pColor.'  '.$pSize.'</td>';
 									echo '<td align="center" id="quan-'.$tid.'">'.$quantity.'</td>';
 									echo '<td align="center" id="rec-'.$tid.'"><a onclick="showAmountDialog('.$tid.')">'.number_format($amount).'</a></td>';
 					
@@ -528,9 +556,23 @@
 									echo '<td id="lastEditDate-"'.$tid.'" align="center">'.$lastEditDate.'</td>';
 									echo '</tr>';
 									//echo '<input type="hidden" id="sumRec-'.$tid.'" value='.$sum_received.'>';
-									$puncCount++;									
+									$puncCount++;
+
+									//total
+									$totalQuan += $quantity;
+									$totalReceived += $amount;
+									$totalMissing += ($quantity-$amount); 									
 							}
 							$stmt->close();
+
+							//total
+							echo '<tfoot align="center" style="font-weight:bold;">';
+							echo '<td colspan="2">ยอดรวม</td>';
+							echo '<td></td><td>'.$totalQuan.'</td>';
+							echo '<td>'.$totalReceived.'</td>';
+							echo '<td align="right">'.$totalAdd.'</td>';
+							echo '<td>'.$totalMissing.'</td><td></td><td></td>';
+							echo '</tfoot>';
                 		}  
                 ?>
 		</table>

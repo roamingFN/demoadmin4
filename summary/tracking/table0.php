@@ -93,7 +93,7 @@
 
 			echo '<tr class="none" id="'.$trackingid.'">'.
 					'<td align="center" class="none">'.$no.'</td>'.
-					'<td><div style="float:left;"><a href="showImg.php?pid='.$value['product_img'].'" onclick="window.open(\'showImg.php?pid='.$value['product_url'].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$value['product_img'].'" title="'.$value['product_color'].' '.$value['product_size'].'"/></a></div>'.
+					'<td><div style="float:left;"><a href="showImg.php?pid='.$value['product_img'].'" onclick="window.open(\'tracking/showImg.php?pid='.$value['product_id'].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$value['product_img'].'" title="'.$value['product_color_china'].' '.$value['product_size_china'].'"/></a></div>'.
 					'<div align="center"><a href="'.$value['product_url'].'" onclick="window.open(\''.$value['product_url'].'\', \'_blank\', \'width=+screen.height,height=+screen.height,fullscreen=yes\'); return false"><img class="linkImg" height="20" width="20" src="../css/images/link.png"/></a></div></td>'.
 					'<td align="right">'.$value['quantity'].'</td>'.		//quanltity
 					'<td align="right">'.number_format($value['unitprice'],2).'</td>'.	//price
@@ -119,9 +119,14 @@
 					}
 			echo	'<td class="number">'.number_format($value['backshop_price'],2).'</td>'.
 					'<td class="number">'.number_format($return_yuan,2).'</td>'.
-					'<td class="number">'.number_format($return_baht,2).'</td>'.
-					'<td><input class="input return return2" shop="'.$key.'" value='.$value['return_yuan'].'></td>'.
-					'<td class="number">'.$missing.'</td>'.
+					'<td class="number">'.number_format($return_baht,2).'</td>';
+					if ($value['backshop_quantity']==$value['received_amount']) { 
+						echo '<td><input style="border-bottom: 0px;" disabled class="input return return2" shop="'.$key.'" value='.$value['return_yuan'].'></td>';
+					}
+					else {
+						echo '<td><input class="input return return2" shop="'.$key.'" value='.$value['return_yuan'].'></td>';
+					}
+			echo	'<td class="number">'.$missing.'</td>'.
 					'<td class="number">'.number_format($missing_baht,2).'</td>';
 					echo '<input type="hidden" value='.$value['received_amount'].'>';
 					echo '<input type="hidden" value='.$value['order_rate'].'>';

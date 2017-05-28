@@ -69,6 +69,7 @@ function calReturn(shop) {
 		//display result 
 		$(this).find("td").eq(16).text(numberWithCommas(yuan));
 		$(this).find("td").eq(17).text(numberWithCommas(baht));
+		$(this).find("input").eq(1).val(yuan.toFixed(2));
 		$(this).find("td").eq(19).text(missing);
 		$(this).find("td").eq(20).text(numberWithCommas(missingBaht));
 
@@ -82,6 +83,7 @@ function calReturn(shop) {
 	$('#shop-' + shop + ' tfoot').find("td").eq(14).text(totalQuan);
 	$('#shop-' + shop + ' tfoot').find("td").eq(16).text(numberWithCommas(totalYuan));
 	$('#shop-' + shop + ' tfoot').find("td").eq(17).text(numberWithCommas(totalBaht));
+	$('#shop-' + shop + ' tfoot').find("td").eq(18).text(numberWithCommas(totalYuan));
 	$('#shop-' + shop + ' tfoot').find("td").eq(19).text(totalMissing);
 	$('#shop-' + shop + ' tfoot').find("td").eq(20).text(numberWithCommas(totalMissingBaht));
 
@@ -91,6 +93,7 @@ function calReturn(shop) {
 		grandTotalMissingBaht += Number($(this).find("td").eq(20).text().replace(/,/g, ''));
 	});
 	$('.grandTotal tr').find("td").eq(0).text(numberWithCommas(grandTotalMissingBaht));
+	$('.grandTotal tr').find("td").eq(1).text(numberWithCommas(grandTotalMissingBaht));
 }
 
 function calReturn2(shop) {

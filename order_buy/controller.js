@@ -188,15 +188,15 @@ function refund(opid){
 					var diffTran = tranPaid-tranCn;
 
 					//show data
-					document.getElementById('ref-quan1').value   = ordered;
-					document.getElementById('ref-quan').value  = received;
-					document.getElementById('ref-sumquan').value    = diffQuan;
-					document.getElementById('ref-cpp1').value     = numWithCom(price1);
-					document.getElementById('ref-cpp').value     = numWithCom(price);
-					document.getElementById('ref-sumcpp').value     = numWithCom(diffPrice);
-					document.getElementById('ref-tran1').value  = numWithCom(tranPaid);
-					document.getElementById('ref-tran').value    = numWithCom(tranCn);
-					document.getElementById('ref-sumtran').value     = numWithCom(diffTran);
+					document.getElementById('ref-quan1').value = ordered;
+					document.getElementById('ref-quan').value = received;
+					document.getElementById('ref-sumquan').value = diffQuan;
+					document.getElementById('ref-cpp1').value = numWithCom(price1);
+					document.getElementById('ref-cpp').value = numWithCom(price);
+					document.getElementById('ref-sumcpp').value = numWithCom(diffPrice);
+					document.getElementById('ref-tran1').value = numWithCom(tranPaid);
+					document.getElementById('ref-tran').value = numWithCom(tranCn);
+					document.getElementById('ref-sumtran').value = numWithCom(diffTran);
 
 					var total1 = parseFloat(document.getElementById('tAmountTh1-'+opid).textContent.replace(/,/g, ''));
 					var total = parseFloat(document.getElementById('totalTh-'+opid).textContent.replace(/,/g, ''));
@@ -221,10 +221,45 @@ function refund(opid){
 					document.getElementById('ref-grandDesc').textContent = desc;
 					document.getElementById('ref-grandSum').textContent = numWithCom(grandVal);
 
+
+					$.ajax({
+						type: 'GET',
+						url: './utility/getRefundData.php?opid='+opid, 
+						dataType: 'json',
+						success: function(result) {
+								var len = countArrayInObject(result['data']);
+								if ((len==0) && (result['error'] == '')) {
+										alert('การดึงข้อมูลล้มเหลว กรุณาแจ้งเจ้าหน้าที่');
+								}
+								else if ((len==0) && (result['error'] != '')) {
+										alert(result['error']);
+								}
+								else {
+										for (var running in result['data']) {
+											var length = result['data'][running].length;
+											if (length==0) continue;
+											document.getElementById('ref-remark').textContent = result['data'][running]['remark_tha'];
+											if (result['data'][running]['return_status']==null) {
+												document.getElementById('ref-status').textContent = 'กำลังดำเนินการ';
+											}
+											else if (result['data'][running]['return_status']==1){
+												document.getElementById('ref-status').textContent = 'คืนแล้ว';	
+											}
+											else if (result['data'][running]['return_status']==2){
+												document.getElementById('ref-status').textContent = 'ยกเลิก';	
+											}
+										}
+								}
+						},
+						error: function(exception) {
+								alert('Exception: '+exception);
+						}
+					});
+
 					//prepare data-----------------------------------------------------------------
-					document.getElementById('ref-oid').value   	= orderId;
-					document.getElementById('ref-opid').value  	= opid;
-					document.getElementById('ref-cid').value   	= customer_id;
+					document.getElementById('ref-oid').value = orderId;
+					document.getElementById('ref-opid').value = opid;
+					document.getElementById('ref-cid').value = customer_id;
 					document.getElementById('tmp-ordered').value = ordered;
 					document.getElementById('tmp-received').value = received;
 					document.getElementById('tmp-missed').value = diffQuan;
@@ -253,6 +288,14 @@ function refund(opid){
 		else {
 				document.getElementById('refundBox').style.visibility = 'hidden';
 		}
+}
+
+function countArrayInObject(result) {
+		var count = 0;
+		for (var tkno in result) {
+			    count++;
+		}
+		return count-1;
 }
 
 		// var addOn = false;
@@ -471,6 +514,7 @@ function refund(opid){
 		                        error: function(exception) {
 		                                alert('Exception: '+exception);
 		                                $("#loading").css('visibility', 'hidden');
+		                                //console.log(exception);
 		                        }
 		           		});
             	}

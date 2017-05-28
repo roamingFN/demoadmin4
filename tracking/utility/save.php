@@ -72,6 +72,7 @@
 		// 		}		
 		// }
 
+		//complete
 		if ($tmpFlg) {
 				//count complete
 				$sql = 'SELECT count(order_product_tracking_id) FROM customer_order_product_tracking WHERE statusid=1 AND order_id=?';
@@ -121,6 +122,14 @@
 								$stmt->bind_param('di',$total,$opid);
 								$stmt->execute();		
 						}
+				}
+
+				$oid = $data['oid'];
+				//if current status id is 7 or 98 in all product
+				if (checkCurrentStatus($con,$oid)) {
+					$sql = 'UPDATE customer_order SET order_status_code=7,date_order_last_update=now() WHERE order_id='.$oid;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
 				}
 		}
 		

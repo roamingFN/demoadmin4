@@ -194,4 +194,19 @@
 			}
 			return $sum;
 	}
+
+	function checkCurrentStatus($con,$oid) {
+		$result = 1;
+		$sql = 'SELECT order_product_id,current_status FROM customer_order_product WHERE order_id='.$oid;
+		$stmt = $con->prepare($sql);
+		$stmt->bind_result($opid,$current_status);
+		$stmt->execute();
+		while($stmt->fetch()) {
+			//echo $opid.' '.$current_status.'<br>';
+			if ($current_status!=7 && $current_status!=98) {
+				$result = 0;
+			}
+		}
+		return $result;
+	}
 ?>

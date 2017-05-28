@@ -16,7 +16,7 @@
     		,op.backshop_quantity,op.quantity,op.unitprice,op.order_shipping_cn_cost,op.order_product_totalprice,op.order_status,op.backshop_price,op.backshop_shipping_cost,op.backshop_total_price,op.return_baht,op.return_status,op.tracking_company,op.return_quantity,op.return_yuan,op.order_taobao
     		,o.order_number,o.remark as oremark, o.order_rate,o.date_order_paid,o.customer_id,op.quantity,o.tracking_no as oTracking,o.taobao,o.summary_return_flag
     		,pa.packageid,pa.packageno,pa.statusid,pa.adddate
-    		, p.product_img, p.shop_name,p.product_url,p.product_color,p.product_size
+    		,p.product_id,p.product_img, p.shop_name,p.product_url,p.product_color_china,p.product_size_china
     		,c.customer_firstname, c.customer_lastname, c.customer_code,c.class_id
 	      	FROM customer_order_product_tracking pt JOIN customer_order o ON pt.order_id=o.order_id
 	      	LEFT JOIN package pa ON pt.packageid=pa.packageid

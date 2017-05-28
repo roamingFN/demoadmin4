@@ -38,7 +38,7 @@
 		if($stmt = $con->prepare('SELECT op.order_product_id,confirmed_product_price,op.quantity,order_shipping_cn_m3_size,order_shipping_cn_weight,
 			order_shipping_cn_ref_no,op.order_shipping_cn_cost,comment,unconfirmed_product_order,order_status,order_cause,backshop_price,backshop_shipping_cost,
 			shop_name,product_img,product_url,product_price,order_shipping_cn_box,order_shipping_rate,
-			product_size,product_color,comment,p.product_id,p.product_url,op.unitprice,
+			product_size_china,product_color_china,comment,p.product_id,p.product_url,op.unitprice,
 			backshop_quantity,backshop_total_price,order_product_totalprice,remark_id,order_taobao
 			,op.first_unitprice,return_status,email_no,chkflg,tracking_company,om.paymore_status,tracking_company
 			FROM customer_order_product op JOIN product p ON op.product_id=p.product_id
@@ -219,6 +219,15 @@
             $stmt = $con->prepare($sql);
 	        $stmt->bind_param('iiiiss',$_POST['ref-oid'],$_POST['ref-opid'],$_POST['ref-cid'],$uid,$subject,$content);
 	        $stmt->execute();
+
+	        //update order_product.current_status=98 if this shop has no item
+			$shopname = getShopName($con,$_POST['ref-opid']);
+			if (checkOrderStatusInShop($con,$_POST['ref-oid'],$shopname)) {
+				$sql = 'UPDATE customer_order_product SET current_status=98 WHERE order_product_id=?';
+				$stmt = $con->prepare($sql);
+				$stmt->bind_param('i',$_POST['ref-opid']);
+				$res = $stmt->execute();
+			}
 
         	echo '<script>alert("เพิ่มข้อมูลการคืนเงินสำเร็จ");window.location.href="product.php?order_id='.$_POST['ref-oid'].'";</script>';
 		}//end refund------------------------------------------------------------------

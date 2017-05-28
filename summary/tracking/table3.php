@@ -31,7 +31,7 @@
 						else $dt = date_format(date_create($value['last_edit_date']),"d/m/Y H:i:s");
 						echo '<tr class="none" id="'.$ptid.'">
 								<td class="center">'.$value['tracking_no'].'</td>
-								<td class="center"><img src="'.$value['product_img'].'"></td>
+								<td class="center"><a href="showImg.php?pid='.$value['product_img'].'" onclick="window.open(\'tracking/showImg.php?pid='.$value['product_id'].'\', \'_blank\', \'width=1024, height=768\'); return false;"><img height="150" width="150" src="'.$value['product_img'].'" title="'.$value['product_color_china'].' '.$value['product_size_china'].'"/></a></td>
 								<td class="number" id="quan-'.$ptid.'">'.number_format($value['backshop_quantity']).'</td>
 								<td class="center" id="received-'.$ptid.'"><a style="color: #00766a;" onclick="showAmountDialog('.$value['order_product_tracking_id'].')">'.number_format($value['received_amount']).'</a></td>
 								<td class="number">'.number_format($value['amount']).'</td>

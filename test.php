@@ -7,18 +7,21 @@
 <?php
 		include './database.php';
 
-		function getTran($con,$ost) {
-			$tran = '';
-			$sql = 'SELECT transport_th_name FROM website_transport WHERE transport_id='.$ost;
+		function isCompletedTracking($con,$optid) {
+			$result = false;
+			$sql = 'SELECT statusid FROM customer_order_product_tracking WHERE order_product_tracking_id=? AND masterflg=1';
 			$stmt = $con->prepare($sql);
+			$stmt->bind_param('i',$optid);
 			$stmt->execute();
-			$stmt->bind_result($tran);
+			$stmt->bind_result($status);
 			while($stmt->fetch()) {
-				$tran = $tran;
+				if ($status==1) {
+					$result = true;
+				}
 			}
-			return $tran;
+			return $result;
 		}
 
-		echo getTran($con,4);
+		echo isCompletedTracking($con,1);
 ?>
 </html>

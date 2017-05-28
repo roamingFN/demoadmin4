@@ -661,4 +661,43 @@
 			return $result;
 	}
 
+	function getShopName($con,$opid) {
+		$shopName = '';
+		$sql = 'SELECT shop_name 
+			FROM customer_order_product op
+			JOIN product p on op.product_id=p.product_id
+			WHERE op.order_product_id=?';
+
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('i',$opid);
+		$stmt->bind_result($shopName);
+		$stmt->execute();
+		while ($stmt->fetch()) {
+			$shopName = $shopName;
+		}
+		return $shopName;
+	}
+
+	function checkOrderStatusInShop($con,$oid,$shopName) {
+		$result = 0;
+		$sql = 'SELECT backshop_quantity 
+			FROM customer_order_product op
+			JOIN product p on op.product_id=p.product_id
+			WHERE op.order_id=? AND p.shop_name=?';
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('is',$oid,$shopName);
+		$stmt->bind_result($backshop_quantity);
+		$stmt->execute();
+		while ($stmt->fetch()) {
+			if ($backshop_quantity==0) {
+				$result = 1;
+			}
+			else {
+				$result = 0;
+				return $result;
+			}
+		}
+		return $result;
+	}
+
 ?>

@@ -9,7 +9,7 @@
 	
 	$data = json_decode($_POST['data'],true);
 	$sql = 'UPDATE customer_order_product'. 
-		' SET backshop_price=?,backshop_quantity=?,backshop_shipping_cost=?,backshop_total_price=?,order_shipping_cn_ref_no=?,current_status=IF(current_status=6,6,?),order_taobao=?'.
+		' SET backshop_price=?,backshop_quantity=?,backshop_shipping_cost=?,backshop_total_price=?,order_shipping_cn_ref_no=?,current_status=IF(current_status=6,6,IF(current_status=98,98,?)),order_taobao=?'.
 		' ,quantity=?,order_shipping_cn_cost=?,order_status=?,order_product_totalprice=?,backshop_allprice_yuan=?,backshop_total_yuan=?,return_baht=?,chkflg=?,tracking_company=?'.
 		' WHERE order_product_id=?';
 	foreach($data as $key=>$item){

@@ -8,7 +8,7 @@
 		header("Location: ../login.php");
 	}
 				
-	include '../database.php';
+	include '../../database.php';
 
 	if(isset($_GET['pid'])) {
 		if($stmt = $con->prepare('SELECT product_img,product_color_china,product_size_china FROM product WHERE product_id='.$_GET['pid'])){

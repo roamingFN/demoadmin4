@@ -23,10 +23,10 @@
 		if($stmt = $con->prepare('SELECT order_product_id,confirmed_product_price,quantity,order_shipping_cn_m3_size,order_shipping_cn_weight,'.
 			'order_shipping_cn_ref_no,customer_order_product.order_shipping_cn_cost,comment,unconfirmed_product_order,order_status,order_cause,backshop_price,backshop_shipping_cost,'.
 			'shop_name,product_img,product_url,product_price,order_shipping_cn_box,order_shipping_rate,'.
-			'product_size,product_color,comment,product.product_id,product.product_url,unitprice,'.
+			'product_size_china,product_color_china,comment,product.product_id,product.product_url,unitprice,'.
 			'backshop_quantity,backshop_total_price,order_product_totalprice,remark_id,order_taobao'.
 			' FROM customer_order_product,product,customer_order_shipping WHERE customer_order_product.product_id=product.product_id AND customer_order_product.order_id='.$oid.' AND '.
-			'customer_order_shipping.order_id='.$oid)) {
+			'customer_order_shipping.order_id='.$oid.' GROUP BY order_product_id ORDER BY order_product_id' )) {
 			$stmt->execute();
 			$stmt->bind_result($opid,$cpp,$quan,$size,$weight,$ref,$cost,$comment,$upo,$status,$cause,
 				$bp,$bcost,$shop,$img,$url,$pp,$box,$osr,$pSize,$pColor,$comment,$pid,$purl,$unp,$backQuan,$backTot,

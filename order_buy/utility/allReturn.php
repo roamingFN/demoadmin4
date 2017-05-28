@@ -44,6 +44,15 @@
 				$stmt = $con->prepare($refundSQL);
 				$stmt->bind_param('siiiiddddiisddd',$rtno,$opid,$value->quan1,$value->quan,$loss,$value->price,$returnYuan,$value->rate,$value->returnBaht,$tid,$_POST['oid'],$ccode,$value->price1,$transport['pay_transport'],$transport['transport']);		
 				$res = $stmt->execute();
+
+				//update order_product.current_status=98 if this shop has no item
+				$shopname = getShopName($con,$opid);
+				if (checkOrderStatusInShop($con,$_POST['oid'],$shopname)) {
+					$sql = 'UPDATE customer_order_product SET current_status=98 WHERE order_product_id=?';
+					$stmt = $con->prepare($sql);
+					$stmt->bind_param('i',$opid);
+					$res = $stmt->execute();
+				}
 		}
 
 		//insert Statement

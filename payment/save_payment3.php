@@ -77,21 +77,23 @@
 			}
 
 			//update others topup_id-----------------------------------------------
-		 	$arr_topup_id = array();
-			$sql = 'SELECT topup_id from payment_detail WHERE order_id='.$tmpoid;
-			$stmt = $con->prepare($sql);
-			$stmt->bind_result($tid);
-			$stmt->execute();
-			while($stmt->fetch()) {
-					array_push($arr_topup_id, $tid);
-			}
-			foreach ($arr_topup_id as $key => $topup_id) {
-					//if (checkTopup($con,$topup_id)) {
-						$sql = 'UPDATE payment_detail SET flag_completed=1 WHERE topup_id=?';
-						$stmt = $con->prepare($sql);
-						$stmt->bind_param('i',$topup_id);
-						$stmt->execute();
-					//}
+		 	foreach ($order_id as $key => $value) {
+			 	$arr_topup_id = array();
+				$sql = 'SELECT topup_id from payment_detail WHERE order_id='.$value;
+				$stmt = $con->prepare($sql);
+				$stmt->bind_result($tid);
+				$stmt->execute();
+				while($stmt->fetch()) {
+						array_push($arr_topup_id, $tid);
+				}
+				foreach ($arr_topup_id as $key => $topup_id) {
+						//if (checkTopup($con,$topup_id)) {
+							$sql = 'UPDATE payment_detail SET flag_completed=1 WHERE topup_id=?';
+							$stmt = $con->prepare($sql);
+							$stmt->bind_param('i',$topup_id);
+							$stmt->execute();
+						//}
+				}
 			}
 
 			foreach ($order_id as $key => $value) {
@@ -186,27 +188,27 @@
 				
 				if ($packageInfo!='') {
 
-						$order_id = array();
+						$packageArr = array();
 						$count1 = 0;
 						$count2 = 0;
 						$type = '';
 						$sql = 'SELECT package_id from payment_detail WHERE topup_id='.$item['topup_id'];
 						$stmt = $con->prepare($sql);
-						$stmt->bind_result($oid);
+						$stmt->bind_result($pid);
 						$stmt->execute();
 						while($stmt->fetch()) {
-								array_push($order_id, $oid);
+								array_push($packageArr, $pid);
 						}
 
-						foreach ($order_id as $key => $value) {
+						foreach ($packageArr as $key => $pid) {
 								//update payment_detail.flag_completed
 								$sql = 'UPDATE payment_detail SET flag_completed=1 WHERE topup_id=? AND package_id=?';
 								//$sql = 'UPDATE payment_detail SET flag_completed=1 WHERE order_id=?';
 								$stmt = $con->prepare($sql);
-								$stmt->bind_param('is',$item['topup_id'],$value);
+								$stmt->bind_param('is',$item['topup_id'],$pid);
 								$stmt->execute();
 
-								$tmpoid = $value;
+								$tmpoid = $pid;
 						}
 
 						//update others topup_id-----------------------------------------------
@@ -227,10 +229,10 @@
 								//}
 						}
 
-						foreach ($order_id as $key => $value) {
+						foreach ($packageArr as $key => $pid) {
 								//1
 								$sql = 'SELECT count(topup_id) FROM payment_detail'.
-									' WHERE flag_completed=1 AND package_id='.$value;
+									' WHERE flag_completed=1 AND package_id='.$pid;
 								$stmt = $con->prepare($sql);
 								$stmt->bind_result($count1);	
 								$stmt->execute();
@@ -240,7 +242,7 @@
 								
 								//2
 								$sql = 'SELECT count(topup_id) FROM payment_detail'.
-									' WHERE package_id='.$value;
+									' WHERE package_id='.$pid;
 								$stmt = $con->prepare($sql);
 								$stmt->bind_result($count2);
 								$stmt->execute();
@@ -251,7 +253,7 @@
 								//if 1==2
 								if ($count1==$count2) {
 										//insert new customer_statement for package
-										$pno = getPackageNo($con,$value);
+										$pno = getPackageNo($con,$pid);
 										// $statement_name = 'ค่าขนส่ง เลขที่สั่งซื้อ '.$ono;
 										// $sql = 'INSERT INTO customer_statement (customer_id,packageid,statement_name,statement_date,credit) VALUES (?,?,?,?,?)';
 										// $dt = getPackageDt($con,$value);
@@ -264,7 +266,7 @@
 										// }
 
 										//update statement
-										$sid = findStatementPackage($con,$value,$pno);
+										$sid = findStatementPackage($con,$pid,$pno);
 										$statement = 'ชำระค่า Package เลขที่ '.$pno.' (ตรวจสอบแล้ว)';
 										$sql = 'UPDATE customer_statement set statement_name=? WHERE statement_id=?';
 										$stmt = $con->prepare($sql);
@@ -272,25 +274,57 @@
 										$res = $stmt->execute();
 
 										//update customer_request_payment
-										$sql = 'UPDATE customer_request_payment SET payment_request_status=2 WHERE package_id='.$value;
+										$sql = 'UPDATE customer_request_payment SET payment_request_status=2 WHERE package_id='.$pid;
 										$stmt = $con->prepare($sql);
 										$stmt->execute();
 
-										//update o.order_status_code and op.current_status
-										$sql = 'UPDATE customer_order SET order_status_code=9,date_order_last_update=now() WHERE order_id='.$value;
+										$sql = 'UPDATE customer_order SET order_status_code=9,date_order_last_update=now() WHERE order_id='.$pid;
 										$stmt = $con->prepare($sql);
 										$stmt->execute();
 
-										$sql = 'UPDATE customer_order_product SET current_status=9, current_updatetime=now() WHERE order_id='.$value;
+										$sql = 'UPDATE customer_order_product SET current_status=9, current_updatetime=now() WHERE order_id='.$pid;
 										$stmt = $con->prepare($sql);
 										$stmt->execute();
 
-										$sql = 'UPDATE customer_order_product as a inner join customer_order_paymore as b on a.order_product_id = b.order_product_id set return_status=3 WHERE b.package_id='.$value;
+										$sql = 'UPDATE customer_order_product as a inner join customer_order_paymore as b on a.order_product_id = b.order_product_id set return_status=3 WHERE b.package_id='.$pid;
 										$stmt = $con->prepare($sql);
 										$stmt->execute();
 
+										//update package status
+										$sql = 'UPDATE package SET statusid=5 WHERE packageid='.$pid;
+										$stmt = $con->prepare($sql);
+										$stmt->execute();
 								}	//end if
 						}
+
+						//14/05/2017 Pratchaya ch. update current status and order status
+						foreach ($packageArr as $key => $pid) {
+							//get order id and order product id
+							$orderArr = array();
+							$sql = 'SELECT order_id,order_product_id from package_detail WHERE packageid='.$pid;
+							$stmt = $con->prepare($sql);
+							$stmt->bind_result($oid,$opid);
+							$stmt->execute();
+							while($stmt->fetch()) {
+									$orderArr[$oid][] = $opid;
+							}
+
+							foreach ($orderArr as $oid => $opidArr) {
+								//update current status for order_product
+								foreach ($opidArr as $i => $opid) {
+									$sql = 'UPDATE customer_order_product SET current_status=10 WHERE order_id='.$oid.' AND order_product_id='.$opid;
+									$stmt = $con->prepare($sql);
+									$stmt->execute();
+								}
+
+								//if current status id is 10 or 98 in all product
+								if (checkCurrentStatus($con,$oid)) {
+									$sql = 'UPDATE customer_order SET order_status_code=10,date_order_last_update=now() WHERE order_id='.$oid;
+									$stmt = $con->prepare($sql);
+									$stmt->execute();
+								}
+							}
+						}	//end 14/05/2017
 				}
 		}
 		updateCustomerClass($con,$item['customer_id']);

@@ -23,6 +23,11 @@
                             <td>ส่วนต่าง</td><td><input style="text-align:right;" id="ref-sumcpp"></td><td>หยวน</td>
                             <td>ส่วนต่าง</td><td><input style="text-align:right;" id="ref-sumtran"></td><td>หยวน</td>
                     </tr>
+                    <tr>
+                            <td>รายละเอียด</td><td id="ref-remark"></td><td></td>
+                            <td>สถานะการคืนเงิน</td><td id="ref-status"></td><td></td>
+                            <td></td><td></td><td></td>    
+                    </tr>
                 </table>
 
                 <table style="width: 70%;">

@@ -97,6 +97,7 @@
 						echo '<input type="hidden" id="cid" name="cid" value="'.$cid.'">';
 				echo '</div>';
 
+				echo '<br><br><br>';
 				include './dialog/amountDialog.php';
 				include './dialog/loading.php';
 				echo '<script src="./tracking/controller.js"></script>';

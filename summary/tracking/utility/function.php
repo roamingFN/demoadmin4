@@ -63,7 +63,7 @@
 				}
 			}
 			$stmt->close();
-			return 'RT' . $year . $newTT;
+			return 'ST' . $year . $newTT;
 		}
 
 		function getTopupID($con,$cid,$oid) {

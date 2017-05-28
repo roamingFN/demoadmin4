@@ -11,7 +11,7 @@
 
 	//update order_product
 	$sql = 'UPDATE customer_order_product 
-		SET current_status=? 
+		SET current_status=IF(current_status=98,98,?) 
 		WHERE order_product_id=?';
 	foreach($data as $key=>$item) {
 		if($key!='oid'&& $key!='status'){
