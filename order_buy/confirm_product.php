@@ -9,7 +9,10 @@
 
 	$sumQuan=0;
 	$data = json_decode($_POST['data'],true);
-
+	//insert/update customer product tracking
+	$res = trckUpdate($con,$data);
+	if ($res==0) return;
+	
 	//update status
 	$stmt = $con->prepare('UPDATE customer_order SET order_status_code=4 WHERE order_id=?');
 	$stmt->bind_param('i',$data['oid']);
@@ -51,9 +54,6 @@
 	if(!$res) {
 			echo $con->error;
 	}
-
-	//insert/update customer product tracking
-	trckUpdate($con,$data);
 	
 	//paymore------------------------------------------
 	$refund = json_decode($_POST['refund'],true);

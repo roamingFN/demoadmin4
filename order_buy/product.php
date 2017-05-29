@@ -612,6 +612,7 @@
 					}else{
 						//alert('กรุณาใส่ข้อมูลให้ถูกต้องค่ะ!');
 						alert(xhr.responseText);
+						location.reload();
 					}
 				}
 			};

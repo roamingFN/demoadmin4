@@ -75,6 +75,55 @@
 			//insert----------------------------------------------------------------------
 			$ptypeInfo = array();
 			$rate = 0;
+			
+			//28/05/2017 Pratchaya Ch. validate tracking if it is alreadys updated then this tracking cannot be deleted
+			foreach($data as $key=>$item) {
+				if($key!='oid' && $key!='grandTotalTh' && $key!='grandTotalCn' && $key!='totalTaobao' && $key!='totalTracking' && $key!='btTran' && $key!='btAmt' && $key!='unote') {
+						//tracking
+						$tracking_no = $item['ref'];
+						$splited_no = explode(",",$tracking_no);
+						$tracking_curr = $item['curr_ref'];
+						$splited_curr = explode(",", $tracking_curr);
+
+						//get oid, opid
+						$oid = $data['oid'];
+						$opid = $key;
+
+						if($tracking_curr==$tracking_no) {
+							continue;
+						}
+
+						if ($tracking_curr=='') {
+							continue;
+						}
+
+						for ($i=0; $i<count($splited_curr); $i++) {
+								$del = $splited_curr[$i];
+								for ($j=0; $j<count($splited_no); $j++) {
+									//echo $splited_curr[$i]."-".$splited_no[$j]."\r\n";
+										//if same tracking then do not delete
+										if ($splited_curr[$i]==$splited_no[$j]) {
+											$del = "0";
+										}
+								}
+								
+								if ($del!="0") {
+									$sql = 'SELECT width,length,height,m3 FROM customer_order_product_tracking WHERE order_id='.$oid.' AND order_product_id='.$opid.' AND tracking_no=\''.$del.'\'';
+									$stmt = $con->prepare($sql);
+									$res = $stmt->execute();
+									$stmt->bind_result($width,$length,$height,$m3);
+									while ($stmt->fetch()) {
+										if ($width!=0 && $length!=0 && $height!=0 && $m3!=0) {
+											echo 'ไม่สามารถทำการลบ Tracking '.$del.' ได้ เนื่องจาก Tracking นี้มีการอัพเดทไปแล้ว';
+											return 0;
+										}
+									}
+								}
+						}
+				}
+			}
+	
+			//add tracking
 			foreach($data as $key=>$item) {
 					if($key!='oid' && $key!='grandTotalTh' && $key!='grandTotalCn' && $key!='totalTaobao' && $key!='totalTracking' && $key!='btTran' && $key!='btAmt' && $key!='unote') {	
 							//check tracking no
@@ -154,6 +203,7 @@
 								$del = $splited_curr[$i];
 								for ($j=0; $j<count($splited_no); $j++) {
 									//echo $splited_curr[$i]."-".$splited_no[$j]."\r\n";
+										//if same tracking then do not delete
 										if ($splited_curr[$i]==$splited_no[$j]) {
 											$del = "0";
 										}

@@ -7,21 +7,22 @@
 <?php
 		include './database.php';
 
-		function isCompletedTracking($con,$optid) {
-			$result = false;
-			$sql = 'SELECT statusid FROM customer_order_product_tracking WHERE order_product_tracking_id=? AND masterflg=1';
+		$oid=688;
+		//$opid=1858;
+		$splited_no = array('Tr00001','Tr00003');
+		for ($i=0; $i<count($splited_no); $i++) {
+			$sql = 'SELECT width,length,height,m3 FROM customer_order_product_tracking WHERE order_id='.$oid.' AND tracking_no=\''.$splited_no[$i].'\'';
 			$stmt = $con->prepare($sql);
-			$stmt->bind_param('i',$optid);
-			$stmt->execute();
-			$stmt->bind_result($status);
-			while($stmt->fetch()) {
-				if ($status==1) {
-					$result = true;
+			$res = $stmt->execute();
+			$stmt->bind_result($width,$length,$height,$m3);
+			while ($stmt->fetch()) {
+				if ($width!=0 && $length!=0 && $height!=0 && $m3!=0) {
+					echo $splited_no[$i].' '.'ไม่สามารถทำการลบ Tracking ได้ เนื่องจากมีการอัพเดทไปแล้ว';
+				}
+				else {
+					echo 'gg';
 				}
 			}
-			return $result;
 		}
-
-		echo isCompletedTracking($con,1);
 ?>
 </html>
