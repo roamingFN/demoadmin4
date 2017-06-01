@@ -80,18 +80,12 @@
 													<th>เลขที่ Order</th>
 													<th>ชื่อลูกค้า</th>
 													<th>ID ลูกค้า</th>
-													<th>จำนวน Tracking</th>
-													<th>จำนวน Tracking ที่ปิดกล่องแล้ว</th>
-													<th>จำนวนที่ลูกค้าสั่ง (ชิ้น)</th>
-													<th>จำนวนที่ร้านค้า Confirm (ชิ้น)</th>
-													<th>จำนวนที่ถึงโกดังไทย (ชิ้น)</th>
-													<th>จำนวนที่ขาด (ชิ้น)</th>
-													<th>ยอดที่ลูกค้าโอน (บาท)</th>
-													<th>ยอดที่ร้านค้า Confirm (บาท)</th>
-													<th>ยอดค่าสินค้าที่ถึงโกดังไทย (บาท)</th>
-													<th>ยอดคืนเงินครั้งที่ 1</th>
-													<th>ยอดค่าสินค้าที่ขาด (บาท)</th>
-													<th>ยอดคืนเงินแล้ว</th>
+													<th>จำนวนที่สั่งได้จริง</th>
+													<th>จำนวนที่รับจริง</th>
+													<th>Diff</th>
+													<th>วันที่ใส่ Tracking ล่าสุด</th>
+													<th>ระยะเวลาที่ทำการสั่งซื้อ</th>
+													<th>ยอดคืนเงินลูกค้า</th>
 													<th>Action</th>
 											</tr>
 					                </thead>';
@@ -101,23 +95,18 @@
 								$dataSet = getData($con,$sql,$condition,$orderBy,'',$paging);
 								foreach ($dataSet as $key => $value) {
 										$oid = $value['order_id'];
+										$lastTrackingUpdateDate = getLastTrackingUpdateDate($con,$oid);
+										$createdDate = getCreatedDate($value['date_order_created']);
 										echo '<tr class="'.($puncCount%2==0? 'punc':'').'">';
 										echo '<td class="fixed">'.$value['order_number'].'</td>';
 										echo '<td>'.$value['customer_firstname'].' '.$value['customer_lastname'].'</td>';
 										echo '<td class="center">'.$value['customer_code'].'</td>';
-										echo '<td class="number">'.number_format($value['total_tracking']).'</td>';
-										echo '<td class="number">'.$value['total_tracking_con'].'</td>';
 										echo '<td class="number">'.$value['product_quantity'].'</td>';
 										echo '<td class="number">'.$value['product_available'].'</td>';
-										echo '<td class="number">'.$value['received_amount'].'</td>';
-										echo '<td class="number">'.($value['missing']).'</td>';
-										echo '<td class="number">'.number_format($value['order_price'],2).'</td>';
-										echo '<td class="number">'.number_format($value['order_price_back'],2).'</td>';
-										echo '<td class="number">'.number_format($value['received_price'],2).'</td>';
-										echo '<td class="number">'.number_format($value['return1'],2).'</td>';
-										echo '<td class="number">'.number_format($value['return1Missing'],2).'</td>';
-										echo '<td class="number">'.number_format($value['returnComplete'],2).'</td>';
-										//echo '<td>'.$value['remark'].'</td>';
+										echo '<td class="number">'.($value['product_available']-$value['product_quantity']).'</td>';
+										echo '<td class="number">'.$lastTrackingUpdateDate.'</td>';
+										echo '<td class="number">'.$createdDate.'</td>';
+										echo '<td class="number">'.number_format($value['total_return'],2).'</td>';
 										echo '<td><a class="green" href="./detail.php?oid='.$value['order_id'].'">Detail</a></td>';
 										echo '</tr>';
 										$sumTotalReturn += $value['return1'];

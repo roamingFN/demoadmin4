@@ -54,7 +54,7 @@
 		// FROM customer_order_summary os JOIN customer_order o ON os.order_id=o.order_id
 		// JOIN customer c ON o.customer_id = c.customer_id';
 
-		$sql = 'SELECT c.customer_firstname, c.customer_lastname, c.customer_code,o.total_tracking, o.order_id, o.order_number, o.customer_id,o.product_quantity,o.product_available,o.received_amount,(o.product_available-o.received_amount) as missing,o.order_price,o.order_price_back,o.received_price
+		$sql = 'SELECT c.customer_firstname, c.customer_lastname, c.customer_code,o.total_tracking, o.order_id, o.order_number, o.customer_id,o.product_quantity,o.product_available,o.received_amount,(o.product_available-o.received_amount) as missing,o.order_price,o.order_price_back,o.received_price,o.total_return,o.date_order_created
 			,(select count(distinct(tracking_no)) from customer_order_product_tracking where order_id = o.order_id and statusid = 1 and packageid > 0) as total_tracking_con
 			,(select sum(return_baht) from customer_order_product where order_id = o.order_id and return_status = 2 and return_baht >0) as return1
 			, (o.order_price_back - o.received_price) as return1Missing

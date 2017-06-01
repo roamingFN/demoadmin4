@@ -9,20 +9,31 @@
 
 		$oid=688;
 		//$opid=1858;
-		$splited_no = array('Tr00001','Tr00003');
-		for ($i=0; $i<count($splited_no); $i++) {
-			$sql = 'SELECT width,length,height,m3 FROM customer_order_product_tracking WHERE order_id='.$oid.' AND tracking_no=\''.$splited_no[$i].'\'';
-			$stmt = $con->prepare($sql);
-			$res = $stmt->execute();
-			$stmt->bind_result($width,$length,$height,$m3);
-			while ($stmt->fetch()) {
-				if ($width!=0 && $length!=0 && $height!=0 && $m3!=0) {
-					echo $splited_no[$i].' '.'ไม่สามารถทำการลบ Tracking ได้ เนื่องจากมีการอัพเดทไปแล้ว';
-				}
-				else {
-					echo 'gg';
-				}
+		function getLastTrackingUpdateDate($con,$oid) {
+			$currentDate = new DateTime();
+			$interval = 0;
+			$sql = 'SELECT last_edit_date FROM customer_order_product_tracking WHERE order_id='.$oid.' ORDER BY last_edit_date DESC LIMIT 1';
+			if($stmt = $con->prepare($sql)) {
+					$stmt->execute();
+					$stmt->bind_result($date);
+					while($stmt->fetch()) {
+						$date = new DateTime($date);
+						$interval = $date->diff($currentDate);
+						$interval = $interval->days;
+					}
 			}
+			else {
+					echo ("Error while getting last tracking update date ".$con->error);
+			}
+			return $interval;
 		}
+		
+		echo getLastTrackingUpdateDate($con,$oid);
+		$currentDate = new DateTime("2017-10-20");
+		$date = new DateTime("2017-10-10");
+		$interval = $currentDate->diff($date);
+		$interval = $interval->days;
+		echo '<br>'.$interval; 
+		
 ?>
 </html>

@@ -163,6 +163,33 @@
 			return $_product;
 	}
 
-	
+	function getLastTrackingUpdateDate($con,$oid) {
+		$currentDate = new DateTime();
+		$interval = "-";
+		$sql = 'SELECT last_edit_date FROM customer_order_product_tracking WHERE order_id='.$oid.' ORDER BY last_edit_date DESC LIMIT 1';
+		if($stmt = $con->prepare($sql)) {
+			$stmt->execute();
+			$stmt->bind_result($date);
+			while($stmt->fetch()) {
+				if ($date == '0000-00-00 00:00:00') return '-';
+				$date = new DateTime($date);
+				$interval = $date->diff($currentDate);
+				$interval = $interval->days;
+			}
+		}
+		else {
+			echo ("Error while getting last tracking update date ".$con->error);
+		}
+		return $interval;
+	}
 
+	function getCreatedDate($date) {
+		$currentDate = new DateTime();
+		$interval = "-";
+		if ($date == '0000-00-00 00:00:00') return '-';
+		$date = new DateTime($date);
+		$interval = $date->diff($currentDate);
+		$interval = $interval->days;
+		return $interval;
+	}
 ?>
