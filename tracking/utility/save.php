@@ -8,10 +8,21 @@
 		include './function.php';
 
 		$data = json_decode($_POST['data'],true);
+
+		//02/06/2017 Pratchaya Ch. check last update, if there are any update before this request then refresh the page
+		foreach ($data as $key => $item) {
+			if($key!='oid' && $key!='oremark') {
+				if (isAlreadyUpdated($con,$item['currentDateTime'],$key,$data['oid'])) {
+					echo 'Tracking นี้มีการอัพเดท กรุณาโหลดหน้าจอใหม่';
+					return;
+				}
+			}
+		}
+		
+		//update tracking
 		$sql = 'UPDATE customer_order_product_tracking 
 			SET received_amount=received_amount+?,amount=amount+?,remark=?,uid=?,last_edit_date=now(),width=?,length=?,height=?,m3=?,weight=?,producttypeid=?,type=?,rate=?,statusid=?,total=?,rateweight=?,ratem3=?
 			WHERE order_product_tracking_id=? AND order_id=?';
-
 		foreach($data as $key=>$item) {
 				if($key!='oid' && $key!='oremark') {
 						$stmt = $con->prepare($sql);

@@ -209,4 +209,18 @@
 		}
 		return $result;
 	}
+
+	function isAlreadyUpdated($con,$curDT,$trackingID,$oid) {
+		$result = false;
+		$sql = 'SELECT order_product_id,last_edit_date FROM customer_order_product_tracking WHERE order_product_tracking_id='.$trackingID.' AND order_id='.$oid;
+		$stmt = $con->prepare($sql);
+		$stmt->bind_result($opid,$last_edit_date);
+		$stmt->execute();
+		while($stmt->fetch()) {
+			if ($curDT < $last_edit_date) {
+				$result = true;
+			}
+		}
+		return $result;
+	}
 ?>

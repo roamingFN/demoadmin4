@@ -247,6 +247,7 @@ function save() {
 				var stat = m3Table.find('input').eq(8).is(':checked')? 0: 1;
 				var total = m3Table.find("input").eq(7).val().replace(/,/g ,'');
 				var remark = $('.remark').find('textarea').eq(0).val();
+				var currentDateTime = $('#currentDateTime').val();
 
 				//22/12/2016	add condition to check width/length/height/weight/rate/total
 				if (width==0) {
@@ -301,7 +302,8 @@ function save() {
 						'opid' : opid,
 						'remark' : remark,
 						'rateWeight': rateWeight,
-						'rateM3': rateM3
+						'rateM3': rateM3,
+						'currentDateTime': currentDateTime
 				};
 		});
 		data['oid'] = $('.remark').attr('id');
@@ -320,6 +322,7 @@ function save() {
 							location.reload();
 						} else{
 							alert(xhr.responseText);
+							location.reload();
 						}
 					}
 				};
