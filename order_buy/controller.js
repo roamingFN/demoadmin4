@@ -238,8 +238,11 @@ function refund(opid){
 										for (var running in result['data']) {
 											var length = result['data'][running].length;
 											if (length==0) continue;
-											document.getElementById('ref-remark').textContent = result['data'][running]['remark_tha'];
+											document.getElementById('ref-remark').textContent = result['data'][running]['return_detail'];
 											if (result['data'][running]['return_status']==null) {
+												document.getElementById('ref-status').textContent = 'กำลังดำเนินการ';
+											}
+											else if (result['data'][running]['return_status']==0) {
 												document.getElementById('ref-status').textContent = 'กำลังดำเนินการ';
 											}
 											else if (result['data'][running]['return_status']==1){
@@ -497,7 +500,8 @@ function countArrayInObject(result) {
 								totalReturn+=returnBaht;		
 						}  
 				}
-				console.log(Object.keys(data).length);
+				console.log(data);
+				//console.log(Object.keys(data).length);
 				if (Object.keys(data).length>0) {
 						$("#loading").css('visibility', 'visible');
 		                $.ajax({
@@ -514,7 +518,7 @@ function countArrayInObject(result) {
 		                        error: function(exception) {
 		                                alert('Exception: '+exception);
 		                                $("#loading").css('visibility', 'hidden');
-		                                //console.log(exception);
+		                                console.log(exception);
 		                        }
 		           		});
             	}

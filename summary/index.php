@@ -95,15 +95,17 @@
 								$dataSet = getData($con,$sql,$condition,$orderBy,'',$paging);
 								foreach ($dataSet as $key => $value) {
 										$oid = $value['order_id'];
+										$productQuantity = getProductQuantity($con,$oid);
+										$productReceived = getProductReceived($con,$oid);
 										$lastTrackingUpdateDate = getLastTrackingUpdateDate($con,$oid);
 										$createdDate = getCreatedDate($value['date_order_created']);
 										echo '<tr class="'.($puncCount%2==0? 'punc':'').'">';
 										echo '<td class="fixed">'.$value['order_number'].'</td>';
 										echo '<td>'.$value['customer_firstname'].' '.$value['customer_lastname'].'</td>';
 										echo '<td class="center">'.$value['customer_code'].'</td>';
-										echo '<td class="number">'.$value['product_quantity'].'</td>';
-										echo '<td class="number">'.$value['product_available'].'</td>';
-										echo '<td class="number">'.($value['product_available']-$value['product_quantity']).'</td>';
+										echo '<td class="number">'.$productQuantity.'</td>';
+										echo '<td class="number">'.$productReceived.'</td>';
+										echo '<td class="number">'.($productReceived-$productQuantity).'</td>';
 										echo '<td class="number">'.$lastTrackingUpdateDate.'</td>';
 										echo '<td class="number">'.$createdDate.'</td>';
 										echo '<td class="number">'.number_format($value['total_return'],2).'</td>';

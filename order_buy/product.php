@@ -172,28 +172,35 @@
 			}
 
 			//insert return--------------------------
-			$transport = getTransport($con,$_POST['ref-opid']);
-			$refundSQL = 'INSERT INTO customer_order_return (return_no, return_date, order_product_id, first_unitquantity, quantity, loss_quantity, unitprice, total_yuan, rate, total_baht, return_status, topup_id, order_id, return_type, customer_code, pay_unitprice, pay_transport, transport)'.
-			' VALUES (\''.$rtno.'\', now(), '.$_POST['ref-opid'].', '.$_POST['tmp-ordered'].', '.$_POST['tmp-received'].', '.$_POST['tmp-missed'].', '.$_POST['tmp-price'].', '.$_POST['tmp-totalCn'].', '.$_POST['tmp-rate'].', '.$_POST['tmp-total'].', 1, '.$tid.', '.$_POST['ref-oid'].', 1, \''.$_ccode.'\', '.$_POST['tmp-price1'].','.$transport['pay_transport'].','.$transport['transport'].')';
-			if($stmt = $con->prepare($refundSQL)) {
-				$res = $stmt->execute();
-				if(!$res) {
-						echo '<script>alert("เพิ่มข้อมูลการคืนเงินล้มเหลว\n'.$stmt->error.'");window.location.href="product.php?order_id='.$_POST['ref-oid'].'";</script>';
-						return;
-				}
-				$lastID = $stmt->insert_id;
-			}
-			else {
-					echo "error while inserting customer_order_return ".$stmt->error;
-					return;
-			}
+			// $transport = getTransport($con,$_POST['ref-opid']);
+			// $refundSQL = 'INSERT INTO customer_order_return (return_no, return_date, order_product_id, first_unitquantity, quantity, loss_quantity, unitprice, total_yuan, rate, total_baht, return_status, topup_id, order_id, return_type, customer_code, pay_unitprice, pay_transport, transport)'.
+			// ' VALUES (\''.$rtno.'\', now(), '.$_POST['ref-opid'].', '.$_POST['tmp-ordered'].', '.$_POST['tmp-received'].', '.$_POST['tmp-missed'].', '.$_POST['tmp-price'].', '.$_POST['tmp-totalCn'].', '.$_POST['tmp-rate'].', '.$_POST['tmp-total'].', 1, '.$tid.', '.$_POST['ref-oid'].', 1, \''.$_ccode.'\', '.$_POST['tmp-price1'].','.$transport['pay_transport'].','.$transport['transport'].')';
+			// if($stmt = $con->prepare($refundSQL)) {
+			// 	$res = $stmt->execute();
+			// 	if(!$res) {
+			// 			echo '<script>alert("เพิ่มข้อมูลการคืนเงินล้มเหลว\n'.$stmt->error.'");window.location.href="product.php?order_id='.$_POST['ref-oid'].'";</script>';
+			// 			return;
+			// 	}
+			// 	$lastID = $stmt->insert_id;
+			// }
+			// else {
+			// 		echo "error while inserting customer_order_return ".$stmt->error;
+			// 		return;
+			// }
+
+			//update customer_order_return
+			$sql = 'UPDATE customer_order_return SET return_status=1 WHERE order_product_id=? AND order_id=?';
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('ii',$_POST['ref-opid'],$_POST['ref-oid']);
+			$res - $stmt->execute();
 
 			//insert customer_statement--------------
 			$refundSQL = 'INSERT INTO customer_statement (customer_id,statement_name,statement_date,debit,credit,order_id, return_id) VALUES (?,?,?,?,?,?,?)';
 			$credit = 0;
+			$date = date("Y-m-d H:i:s");
 			$statement_name = 'คืนเงิน - เลขที่ '.$rtno;
 			$stmt = $con->prepare($refundSQL);
-			$stmt->bind_param('sssssss',$_POST['ref-cid'],$statement_name,date("Y-m-d H:i:s"),$_POST['tmp-total'],$credit,$_POST['ref-oid'],$lastID); 
+			$stmt->bind_param('sssssss',$_POST['ref-cid'],$statement_name,$date,$_POST['tmp-total'],$credit,$_POST['ref-oid'],$lastID); 
 			$res = $stmt->execute();
 			if(!$res) {
 					echo '<script>alert("เพิ่มข้อมูลการคืนเงินล้มเหลว\n'.$stmt->error.'");';
@@ -250,8 +257,9 @@
 			}
 
 			//update customer_order_return------------------------
+			$date = date("Y-m-d H:i:s");
 			$stmt = $con->prepare('UPDATE customer_order_return SET return_status=2,cancel_date=?,cancel_by=? WHERE order_product_id=?');
-			$stmt->bind_param('sss',date("Y-m-d H:i:s"),$_SESSION['ID'],$tmpopid);
+			$stmt->bind_param('sss',$date,$_SESSION['ID'],$tmpopid);
 			$res = $stmt->execute();
 			if(!$res) {
 					echo '<script>alert("ยกเลิกข้อมูลการคืนเงินล้มเหลว\n'.$stmt->error.'");window.location.href="product.php?order_id='.$_POST['bref-oid'].'";</script>';
@@ -283,7 +291,7 @@
 			$debit = 0;
 			$statement_name = 'ยกเลิกคืนเงิน - เลขที่ '.$rno;
 			$stmt = $con->prepare($refundSQL);
-			$stmt->bind_param('ssssssii',$_POST['bref-cid'],$statement_name,date("Y-m-d H:i:s"),$debit,$credit,$_POST['bref-oid'],$tid,$rid); 
+			$stmt->bind_param('ssssssii',$_POST['bref-cid'],$statement_name,$date,$debit,$credit,$_POST['bref-oid'],$tid,$rid); 
 			$res = $stmt->execute();
 			if(!$res) {
 					echo '<script>alert("ยกเลิกข้อมูลการคืนเงินล้มเหลว\n'.$stmt->error.'");window.location.href="product.php?order_id='.$_POST['bref-oid'].'";</script>';
@@ -664,7 +672,7 @@
 				var allPriceYuan = numberify(document.getElementById('totalYuan-'+id).textContent);
 				var btYuan = numberify(document.getElementById('totalCn-'+id).textContent);
 				var ret = parseFloat(document.getElementById('refund-'+id).textContent.replace(/,/g, ''));
-				console.log(ret);
+				
 				if ((stt1==0)&&(stt2==0)) {
 					alert("กรุณาเลือกสถานะการสั่ง");
 					return 0;		//exit
@@ -724,6 +732,7 @@
 					'totalpCn1':totalpCn1,
 					'quan':quan,
 					'cpp':cpp,
+					'cpp1':cpp1,
 					'tran':bTran,
 					'taobao':taobao,
 					'ref':ref,
@@ -733,7 +742,8 @@
 					'btyuan': btYuan,
 					'return': ret,
 					'chkflg': chkflg,
-					'company' : com
+					'company' : com,
+					'rate': rate1
 				};
 				grandTotalTh = Number(grandTotalTh) + Number(totalp1);
 				grandTotalCn = Number(grandTotalCn) + Number(totalpCn1);

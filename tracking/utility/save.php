@@ -11,8 +11,8 @@
 
 		//02/06/2017 Pratchaya Ch. check last update, if there are any update before this request then refresh the page
 		foreach ($data as $key => $item) {
-			if($key!='oid' && $key!='oremark') {
-				if (isAlreadyUpdated($con,$item['currentDateTime'],$key,$data['oid'])) {
+			if ($key!='oid' && $key!='oremark') {
+				if (isLastUpdate($con,$item['currentDateTime'],$key,$data['oid'])) {
 					echo 'Tracking นี้มีการอัพเดท กรุณาโหลดหน้าจอใหม่';
 					return;
 				}

@@ -3,7 +3,7 @@
 		if(!isset($_SESSION['ID'])){
 			header("Location: ../login.php");
 		}
-		require_once('../../database.php');
+		require_once('../../../database.php');
 		
 		if (empty($_GET['opid'])) return;
 
@@ -16,8 +16,9 @@
 		//build condition
 		$condition = '';
 
-		$sql = 'SELECT ot.return_status,ot.return_detail 
-		FROM customer_order_product op JOIN customer_order_return ot on ot.order_product_id=op.order_product_id
+		$sql = 'SELECT op.return_quantity,op.order_product_id,op.return_yuan,op.backshop_price,o.order_id,o.order_rate,o.customer_id,op.order_shipping_cn_cost,op.backshop_quantity,rs.return_status,rs.remark
+		FROM customer_order_product op JOIN customer_order o ON op.order_id=o.order_id
+		LEFT JOIN customer_order_return_summary rs ON op.order_product_id=rs.order_product_id
 		WHERE op.order_product_id='.$opid;
 		
 		$result = $con->query($sql); 

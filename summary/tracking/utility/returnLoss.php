@@ -15,13 +15,14 @@
 	$oid = $_POST['oid'];
 	$ccode = getCustomerCode($con,$_POST['cid']);
 	$rtno = genCRN($con);
+	$remark = 'สินค้าสุญหาย';
 
 	foreach ($data as $opid => $value) {
 			//update customer_order_product
-			// $sql = 'UPDATE customer_order_product SET return_status=2,return_baht=? WHERE order_product_id=?';
-			// $stmt = $con->prepare($sql);
-			// $stmt->bind_param('di',$value->returnBaht,$opid);
-			// $res = $stmt->execute(); 
+			$sql = 'UPDATE customer_order_product SET loss_status=1 WHERE order_product_id=?';
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('i',$opid);
+			$res = $stmt->execute(); 
 
 			//update topup
 			$tid = getTopupID($con,$_POST['cid'],$_POST['oid']);
@@ -50,10 +51,11 @@
 																,total_baht
 																,topup_id
 																,order_id
-																,customer_code)'.
-			' VALUES (now(),1,1,?,?,?,?,?,?,?,?,?,?,?,?)';
+																,customer_code
+																,remark)'.
+			' VALUES (now(),1,2,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 			$stmt = $con->prepare($refundSQL);
-			$stmt->bind_param('siiiiddddiis', $rtno, $opid, $value->backshop_quan, $loss, $value->return_quan, $value->backshop_price, $return_yuan ,$value->rate,$return_baht,$tid,$oid,$ccode);		
+			$stmt->bind_param('siiiiddddiiss', $rtno, $opid, $value->backshop_quan, $loss, $value->return_quan, $value->backshop_price, $return_yuan ,$value->rate,$return_baht,$tid,$oid,$ccode,$remark);		
 			$res = $stmt->execute();
 	}
 
@@ -75,7 +77,7 @@
 	//insert total message log
 	$uid = getuserid($con,$_SESSION['ID']);
     $subject = 'คืนเงินค่าสินค้า รายการสั่งซื้อ '.$rtno;
-    $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format($_POST['return_yuan2'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
+    $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format((float)$_POST['return_yuan2'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
     $sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link)
     	VALUES (?,?,?,?,?,now(),1)';
     $stmt = $con->prepare($sql);
