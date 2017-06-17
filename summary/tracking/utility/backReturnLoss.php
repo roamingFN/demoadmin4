@@ -24,7 +24,7 @@
 
 		//update customer_order_return------------------------
 		$date = date("Y-m-d H:i:s");
-		$stmt = $con->prepare('UPDATE customer_order_return_summary SET return_status=2,cancel_date=?,cancel_by=? WHERE return_type=1 AND order_product_id=?');
+		$stmt = $con->prepare('UPDATE customer_order_return_summary SET return_status=2,cancel_date=?,cancel_by=? WHERE return_type=2 AND order_product_id=?');
 		$stmt->bind_param('sss',$date,$_SESSION['ID'],$opid);
 		$res = $stmt->execute();
 
@@ -53,9 +53,15 @@
 		$res = $stmt->execute();
 
 		//update customer_order.flag_return
-		$sql = 'UPDATE customer_order SET summary_return_flag=0 WHERE order_id=?';
+		// $sql = 'UPDATE customer_order SET summary_return_flag=0 WHERE order_id=?';
+	 //    $stmt = $con->prepare($sql);
+	 //    $stmt->bind_param('i',$_POST['oid']);
+	 //    $stmt->execute();
+
+		//update customer_order.flag_return
+		$sql = 'UPDATE customer_order_product SET loss_status=0 WHERE order_product_id=?';
 	    $stmt = $con->prepare($sql);
-	    $stmt->bind_param('i',$_POST['oid']);
+	    $stmt->bind_param('i',$opid);
 	    $stmt->execute();
 
 		//update customer------------------------

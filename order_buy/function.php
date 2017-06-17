@@ -75,6 +75,7 @@
 			//insert----------------------------------------------------------------------
 			$ptypeInfo = array();
 			$rate = 0;
+			$res = 1;
 			
 			//28/05/2017 Pratchaya Ch. validate tracking if it is alreadys updated then this tracking cannot be deleted
 			foreach($data as $key=>$item) {
@@ -122,7 +123,7 @@
 						}
 				}
 			}
-	
+			
 			//add tracking
 			foreach($data as $key=>$item) {
 					if($key!='oid' && $key!='grandTotalTh' && $key!='grandTotalCn' && $key!='totalTaobao' && $key!='totalTracking' && $key!='btTran' && $key!='btAmt' && $key!='unote') {	
@@ -591,6 +592,19 @@
 			return $ccode;
 	}
 
+	function getCustomerCodeByOrderID($con,$oid) {
+			$ccode = '';
+			$sql = 'SELECT customer_code FROM customer JOIN customer_order WHERE customer.customer_id=customer_order.customer_id AND order_id=?';
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('i',$oid);
+			$stmt->bind_result($ccode);
+			$stmt->execute();
+			while ($stmt->fetch()) {
+					$ccode = $ccode;
+			}
+			return $ccode;
+	}
+
 	function getData($con,$sql,$condition,$orderBy,$groupBy,$paging) {
 			if(!isset($con)) return;
 			if(!isset($sql)) return;
@@ -748,6 +762,32 @@
 			}
 		}
 		return $result;
+	}
+
+	function getOrderReturnID($con,$opid,$oid) {
+		$rtid = 0;
+		$sql = 'SELECT running FROM customer_order_return WHERE order_product_id=? AND order_id=?';
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('ii',$opid,$oid);
+		$stmt->bind_result($rtid);
+		$stmt->execute();
+		while ($stmt->fetch()) {
+			$rtid = $rtid;
+		}
+		return $rtid;
+	}
+
+	function getOrderReturnNO($con,$opid,$oid) {
+		$rtno = '';
+		$sql = 'SELECT return_no FROM customer_order_return WHERE order_product_id=? AND order_id=?';
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('ii',$opid,$oid);
+		$stmt->bind_result($rtno);
+		$stmt->execute();
+		while ($stmt->fetch()) {
+			$rtno = $rtno;
+		}
+		return $rtno;
 	}
 
 ?>

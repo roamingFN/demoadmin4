@@ -192,4 +192,40 @@
 		$interval = $interval->days;
 		return $interval;
 	}
+
+	function getProductQuantity($con,$oid) {
+		$quan = 0;
+		$sql = 'SELECT op.backshop_quantity,op.return_quantity
+		FROM customer_order o JOIN customer_order_product op ON o.order_id=op.order_id
+		WHERE op.current_status<>98 AND o.order_id='.$oid;
+		if($stmt = $con->prepare($sql)) {
+			$stmt->execute();
+			$stmt->bind_result($backshop_quantity,$return_quantity);
+			while($stmt->fetch()) {
+				$quan += ($backshop_quantity-$return_quantity);
+			}
+		}
+		else {
+			echo ("Error while getting product quantity ".$con->error);
+		}
+		return $quan;
+	}
+
+	function getProductReceived($con,$oid) {
+		$quan = 0;
+		$sql = 'SELECT pt.received_amount
+		FROM customer_order o JOIN customer_order_product_tracking pt ON o.order_id=pt.order_id
+		WHERE o.order_id='.$oid;
+		if($stmt = $con->prepare($sql)) {
+			$stmt->execute();
+			$stmt->bind_result($received_amount);
+			while($stmt->fetch()) {
+				$quan += $received_amount;
+			}
+		}
+		else {
+			echo ("Error while getting product received ".$con->error);
+		}
+		return $quan;
+	}
 ?>

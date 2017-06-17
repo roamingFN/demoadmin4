@@ -9,9 +9,10 @@
 
 	$sumQuan=0;
 	$data = json_decode($_POST['data'],true);
+	
 	//insert/update customer product tracking
 	$res = trckUpdate($con,$data);
-	if ($res==0) return;
+	if ($res==0) return 'Update Tracking ขัดแข้ง กรุณาติดต่อผู้ดูแลระบบ';
 	
 	//update status
 	$stmt = $con->prepare('UPDATE customer_order SET order_status_code=4 WHERE order_id=?');
@@ -42,7 +43,41 @@
 			}
 		}
 	}
+	
+	//insert customer_order_return
+	foreach ($data as $key => $value) {
+		if($key!='oid' && $key!='grandTotalTh' && $key!='grandTotalCn' && $key!='totalTaobao' && $key!='totalTracking' && $key!='btTran' && $key!='btAmt' && $key!='unote') {
+			if ($value['return']<=0) continue;
+	 		
+	 		//prepare data
+	 		$cid = getCid($con,$data['oid']);
+	 		$ccode = getCustomerCode($con,$cid);
+			$rtno = genCRN($con);
+			$tid = getTopupID($con,$cid,$data['oid']);
 
+			$loss = $value['quan1']-$value['quan'];
+			if ($value['rate']==0) {
+					$returnYuan = 0;
+			}
+			else {
+					$returnYuan = $value['return']/$value['rate'];
+			}
+
+			$return_detail = 'สินค้าหมด';
+			$transport = getTransport($con,$key);
+			$refundSQL = 'INSERT INTO customer_order_return (return_no, return_date, order_product_id, first_unitquantity, quantity, loss_quantity, unitprice, total_yuan, rate, total_baht, return_status, topup_id, order_id, return_type, customer_code, pay_unitprice, pay_transport, transport, return_detail)'.
+			' VALUES (?,now(),?,?,?,?,?,?,?,?,0,?,?,1,?,?,?,?,?)';
+			if ($stmt = $con->prepare($refundSQL)) {
+				$stmt->bind_param('siiiiddddiisddds',$rtno,$key,$value['quan1'],$value['quan'],$loss,$value['cpp'],$returnYuan,$value['rate'],$value['return'],$tid,$data['oid'],$ccode,$value['cpp1'],$transport['pay_transport'],$transport['transport'],$return_detail);		
+				$res = $stmt->execute();
+				if (!$res) echo $con->error;
+			}
+			else {
+				echo $con->error;
+			}
+		}
+	}
+	
 	//update customer_order
 	$sql = 'UPDATE customer_order'. 
 		' SET order_price=?,order_price_yuan=?,taobao=?,tracking_no=?,date_order_last_update=now(),order_price_back=?,order_shop_transfer_back=?,user_note=?,update_by=?,product_available=?,total_tracking=?'.

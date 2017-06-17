@@ -9,7 +9,7 @@
 	$data = json_decode($_POST['data'],true);
 
 	$sqlProduct = 'UPDATE customer_order_product 
-		SET return_quantity=?, return_yuan=?
+		SET return_quantity=?, return_yuan=?, loss_quantity=?, loss_baht=?
 		WHERE order_product_id=?';
 
 	$sqlTracking = 'UPDATE customer_order_product_tracking
@@ -18,7 +18,7 @@
 
 	foreach($data as $key=>$item) {
 		$stmt = $con->prepare($sqlProduct);
-		$stmt->bind_param('idi',$item['return_quan'],$item['return_yuan2'],$item['opid']);
+		$stmt->bind_param('ididi',$item['return_quan'],$item['return_yuan2'],$item['loss_quan'],$item['loss_baht'],$item['opid']);
 		$res = $stmt->execute();
 
 		$stmt = $con->prepare($sqlTracking);

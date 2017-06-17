@@ -93,8 +93,9 @@
 		}
 
 		function checkBal($con,$opid) {
+			$tid = 0;
 			$bal = 0;
-			$sql = 'SELECT topup_id FROM customer_order_return WHERE order_product_id='.$opid;
+			$sql = 'SELECT topup_id FROM customer_order_return_summary WHERE return_type=2 AND order_product_id='.$opid;
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$stmt->bind_result($tid);

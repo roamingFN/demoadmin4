@@ -6,34 +6,24 @@
 
 <?php
 		include './database.php';
+		$tid = 0;
 
-		$oid=688;
-		//$opid=1858;
-		function getLastTrackingUpdateDate($con,$oid) {
-			$currentDate = new DateTime();
-			$interval = 0;
-			$sql = 'SELECT last_edit_date FROM customer_order_product_tracking WHERE order_id='.$oid.' ORDER BY last_edit_date DESC LIMIT 1';
-			if($stmt = $con->prepare($sql)) {
-					$stmt->execute();
-					$stmt->bind_result($date);
-					while($stmt->fetch()) {
-						$date = new DateTime($date);
-						$interval = $date->diff($currentDate);
-						$interval = $interval->days;
-					}
-			}
-			else {
-					echo ("Error while getting last tracking update date ".$con->error);
-			}
-			return $interval;
+		$sql = 'SELECT topup_id FROM customer_order_return WHERE order_product_id=2491';
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$stmt->bind_result($tid);
+		while($stmt->fetch()) {
+				$tid = $tid;
 		}
-		
-		echo getLastTrackingUpdateDate($con,$oid);
-		$currentDate = new DateTime("2017-10-20");
-		$date = new DateTime("2017-10-10");
-		$interval = $currentDate->diff($date);
-		$interval = $interval->days;
-		echo '<br>'.$interval; 
-		
+		echo $tid;
+		// $sql = 'SELECT usable_amout FROM customer_request_topup WHERE topup_id='.$tid;
+		// $stmt = $con->prepare($sql);
+		// $stmt->execute();
+		// $stmt->bind_result($bal);
+		// while($stmt->fetch()) {
+		// 		$bal = $bal;
+		// }
+		//echo $bal;
+
 ?>
 </html>

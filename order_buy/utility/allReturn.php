@@ -12,9 +12,8 @@
 		$data = json_decode($_POST['data']);
 
 		//get customer code
-		$ccode = getCustomerCode($con,$_POST['cid']);
-
-		$rtno = genCRN($con);
+		//$ccode = getCustomerCode($con,$_POST['cid']);
+		//$rtno = genCRN($con);
 		foreach ($data as $opid => $value) {
 				//update customer_order_product
 				$sql = 'UPDATE customer_order_product SET return_status=2,return_baht=? WHERE order_product_id=?';
@@ -38,11 +37,35 @@
 						$returnYuan = $value->returnBaht/$value->rate;
 				}
 
+				// $transport = getTransport($con,$opid);
+				// $refundSQL = 'INSERT INTO customer_order_return (return_no, return_date, order_product_id, first_unitquantity, quantity, loss_quantity, unitprice, total_yuan, rate, total_baht, return_status, topup_id, order_id, return_type, customer_code, pay_unitprice, pay_transport, transport)'.
+				// ' VALUES (?,now(),?,?,?,?,?,?,?,?,1,?,?,1,?,?,?,?)';
+				// $stmt = $con->prepare($refundSQL);
+				// $stmt->bind_param('siiiiddddiisddd',$rtno,$opid,$value->quan1,$value->quan,$loss,$value->price,$returnYuan,$value->rate,$value->returnBaht,$tid,$_POST['oid'],$ccode,$value->price1,$transport['pay_transport'],$transport['transport']);		
+				// $res = $stmt->execute();
+
+				//update customer_order_return
+				$rtid = getOrderReturnID($con,$opid,$_POST['oid']);
 				$transport = getTransport($con,$opid);
-				$refundSQL = 'INSERT INTO customer_order_return (return_no, return_date, order_product_id, first_unitquantity, quantity, loss_quantity, unitprice, total_yuan, rate, total_baht, return_status, topup_id, order_id, return_type, customer_code, pay_unitprice, pay_transport, transport)'.
-				' VALUES (?,now(),?,?,?,?,?,?,?,?,1,?,?,1,?,?,?,?)';
+				$refundSQL = 'UPDATE customer_order_return SET return_date=now(), order_product_id=?, first_unitquantity=?, quantity=?, loss_quantity=?, unitprice=?, total_yuan=?, rate=?, total_baht=?, return_status=1, topup_id=?, order_id=?, return_type=1, customer_code=?, pay_unitprice=?, pay_transport=?, transport=? WHERE running=?';
 				$stmt = $con->prepare($refundSQL);
-				$stmt->bind_param('siiiiddddiisddd',$rtno,$opid,$value->quan1,$value->quan,$loss,$value->price,$returnYuan,$value->rate,$value->returnBaht,$tid,$_POST['oid'],$ccode,$value->price1,$transport['pay_transport'],$transport['transport']);		
+				$stmt->bind_param('iiiiddddiisdddi',
+					$opid,
+					$value->quan1,
+					$value->quan,
+					$loss,
+					$value->price,
+					$returnYuan,
+					$value->rate,
+					$value->returnBaht,
+					$tid,
+					$_POST['oid'],
+					$ccode,
+					$value->price1,
+					$transport['pay_transport'],
+					$transport['transport'],
+					$rtid
+				);		
 				$res = $stmt->execute();
 
 				//update order_product.current_status=98 if this shop has no item
@@ -53,33 +76,35 @@
 					$stmt->bind_param('i',$opid);
 					$res = $stmt->execute();
 				}
+
+				//insert Statement
+				$rtno = getOrderReturnNO($con,$opid,$_POST['oid']);
+				$refundSQL = 'INSERT INTO customer_statement (customer_id,statement_name,statement_date,debit,credit,order_id) VALUES (?,?,?,?,?,?)';
+				$credit = 0;
+				$date = date("Y-m-d H:i:s");
+				$statement_name = 'คืนเงิน - เลขที่ '.$rtno;
+				$stmt = $con->prepare($refundSQL);
+				$stmt->bind_param('ssssss',$_POST['cid'],$statement_name,$date,$_POST['totalReturn'],$credit,$_POST['oid']); 
+				$res = $stmt->execute();
+				
+				//update customer
+				$sql = 'UPDATE customer SET current_amount=current_amount+? WHERE customer_id=?';
+				$stmt = $con->prepare($sql);
+				$stmt->bind_param('ss',$_POST['totalReturn'],$_POST['cid']);
+				$res = $stmt->execute();
+
+				//insert total message log
+				$uid = getuserid($con,$_SESSION['ID']);
+		        $subject = 'คืนเงินค่าสินค้า รายการสั่งซื้อ '.$rtno;
+		        $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format($_POST['totalReturn'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
+		        $sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link)
+		        	VALUES (?,?,?,?,?,now(),1)';
+		        $stmt = $con->prepare($sql);
+		        $stmt->bind_param('iiiss',$_POST['oid'],$_POST['cid'],$uid,$subject,$content);
+		        $stmt->execute();
 		}
 
-		//insert Statement
-		$refundSQL = 'INSERT INTO customer_statement (customer_id,statement_name,statement_date,debit,credit,order_id) VALUES (?,?,?,?,?,?)';
-		$credit = 0;
-		$statement_name = 'คืนเงิน - เลขที่ '.$rtno;
-		$stmt = $con->prepare($refundSQL);
-		$stmt->bind_param('ssssss',$_POST['cid'],$statement_name,date("Y-m-d H:i:s"),$_POST['totalReturn'],$credit,$_POST['oid']); 
-		$res = $stmt->execute();
-		
-		// //update customer
-		$sql = 'UPDATE customer SET current_amount=current_amount+? WHERE customer_id=?';
-		$stmt = $con->prepare($sql);
-		$stmt->bind_param('ss',$_POST['totalReturn'],$_POST['cid']);
-		$res = $stmt->execute();
-
-		//insert total message log
-		$uid = getuserid($con,$_SESSION['ID']);
-        $subject = 'คืนเงินค่าสินค้า รายการสั่งซื้อ '.$rtno;
-        $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format($_POST['totalReturn'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
-        $sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link)
-        	VALUES (?,?,?,?,?,now(),1)';
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param('iiiss',$_POST['oid'],$_POST['cid'],$uid,$subject,$content);
-        $stmt->execute();
-
-        //update customer_order.flag_return
+		//update customer_order.flag_return
         $sql = 'UPDATE customer_order SET flag_return=1 WHERE order_id=?';
         $stmt = $con->prepare($sql);
         $stmt->bind_param('i',$_POST['oid']);
