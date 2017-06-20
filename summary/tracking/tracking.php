@@ -113,7 +113,7 @@
 
 				echo '<div class="remark" style="display:inline">';
 						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>หมายเหตุ</span><br>';
-						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="remark" style="padding-left:5%;">'.$remark.'</textarea>';
+						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="remark">'.$remark.'</textarea>';
 						echo '<input type="hidden" id="oid" name="oid" value="'.$oid.'">';
 						echo '<input type="hidden" id="cid" name="cid" value="'.$cid.'">';
 				echo '</div>';
