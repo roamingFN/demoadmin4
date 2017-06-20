@@ -26,11 +26,11 @@
                             <td>1</td>
                             <td><input style="text-align: right;" name="return_quantity" id="return_quantity" style="width: 80px;"></td>
                             <td><input style="text-align: right;" name="return_yuan" id="return_yuan" style="width: 130px;"></td>
-                            <td><input readonly style="text-align: right;" name="backshop_price" id="backshop_price" style="width: 130px;"></td>
-                            <td><input style="text-align: right;" name="total" id="total" style="width: 130px;" readonly></td>
-                            <td><input style="text-align: right;" name="tran_cost" id="tran_cost" style="width: 130px;" readonly></td>
-                            <td><input style="text-align: right;" name="yuan" id="yuan" style="width: 130px;" readonly></td>
-                            <td><input style="text-align: right;" name="baht" id="baht" style="width: 130px;" readonly></td>
+                            <td><input style="text-align: right;background: #d3d3d3;" name="backshop_price" id="backshop_price" style="width: 130px;" readonly></td>
+                            <td><input style="text-align: right;background: #d3d3d3;" name="total" id="total" style="width: 130px;" readonly></td>
+                            <td><input style="text-align: right;background: #d3d3d3;" name="tran_cost" id="tran_cost" style="width: 130px;" readonly></td>
+                            <td><input style="text-align: right;background: #d3d3d3;" name="yuan" id="yuan" style="width: 130px;" readonly></td>
+                            <td><input style="text-align: right;background: #d3d3d3;" name="baht" id="baht" style="width: 130px;" readonly></td>
                             <td id="status"></td>
                             <td><div id="action"></div></td>
                             <td><input id="remark"></td>

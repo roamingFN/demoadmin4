@@ -76,33 +76,33 @@
 					$stmt->bind_param('i',$opid);
 					$res = $stmt->execute();
 				}
-
-				//insert Statement
-				$rtno = getOrderReturnNO($con,$opid,$_POST['oid']);
-				$refundSQL = 'INSERT INTO customer_statement (customer_id,statement_name,statement_date,debit,credit,order_id) VALUES (?,?,?,?,?,?)';
-				$credit = 0;
-				$date = date("Y-m-d H:i:s");
-				$statement_name = 'คืนเงิน - เลขที่ '.$rtno;
-				$stmt = $con->prepare($refundSQL);
-				$stmt->bind_param('ssssss',$_POST['cid'],$statement_name,$date,$_POST['totalReturn'],$credit,$_POST['oid']); 
-				$res = $stmt->execute();
-				
-				//update customer
-				$sql = 'UPDATE customer SET current_amount=current_amount+? WHERE customer_id=?';
-				$stmt = $con->prepare($sql);
-				$stmt->bind_param('ss',$_POST['totalReturn'],$_POST['cid']);
-				$res = $stmt->execute();
-
-				//insert total message log
-				$uid = getuserid($con,$_SESSION['ID']);
-		        $subject = 'คืนเงินค่าสินค้า รายการสั่งซื้อ '.$rtno;
-		        $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format($_POST['totalReturn'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
-		        $sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link)
-		        	VALUES (?,?,?,?,?,now(),1)';
-		        $stmt = $con->prepare($sql);
-		        $stmt->bind_param('iiiss',$_POST['oid'],$_POST['cid'],$uid,$subject,$content);
-		        $stmt->execute();
 		}
+
+		//insert Statement
+		$rtno = getOrderReturnNO($con,$opid,$_POST['oid']);
+		$refundSQL = 'INSERT INTO customer_statement (customer_id,statement_name,statement_date,debit,credit,order_id) VALUES (?,?,?,?,?,?)';
+		$credit = 0;
+		$date = date("Y-m-d H:i:s");
+		$statement_name = 'คืนเงิน - เลขที่ '.$rtno;
+		$stmt = $con->prepare($refundSQL);
+		$stmt->bind_param('ssssss',$_POST['cid'],$statement_name,$date,$_POST['totalReturn'],$credit,$_POST['oid']); 
+		$res = $stmt->execute();
+		
+		//update customer
+		$sql = 'UPDATE customer SET current_amount=current_amount+? WHERE customer_id=?';
+		$stmt = $con->prepare($sql);
+		$stmt->bind_param('ss',$_POST['totalReturn'],$_POST['cid']);
+		$res = $stmt->execute();
+
+		//insert total message log
+		$uid = getuserid($con,$_SESSION['ID']);
+        $subject = 'คืนเงินค่าสินค้า รายการสั่งซื้อ '.$rtno;
+        $content = 'คืนเงินค่าสินค้า จำนวนเงิน '.number_format($_POST['totalReturn'],2).' บาท รายละเอียดคลิกปุ่มลูกศรที่แถวสินค้า <img src="images/more.png">';
+        $sql = 'INSERT INTO total_message_log (order_id,customer_id,user_id,subject,content,message_date,active_link)
+        	VALUES (?,?,?,?,?,now(),1)';
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param('iiiss',$_POST['oid'],$_POST['cid'],$uid,$subject,$content);
+        $stmt->execute();
 
 		//update customer_order.flag_return
         $sql = 'UPDATE customer_order SET flag_return=1 WHERE order_id=?';

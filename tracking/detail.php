@@ -47,7 +47,7 @@
 		//date time to check current update
 		date_default_timezone_set("Asia/Bangkok");
 		$currentDateTime = new DateTime();
-		echo date_format($currentDateTime,"Y-m-d H:i:s");
+		//echo date_format($currentDateTime,"Y-m-d H:i:s");
 		echo '<input id="currentDateTime" type="hidden" value=\''.date_format($currentDateTime,"Y-m-d H:i:s").'\'>';
 		
 	 	//content--------------------------------------------------------------------------
